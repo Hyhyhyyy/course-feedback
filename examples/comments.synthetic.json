@@ -1,0 +1,20 @@
+[
+ {"source_id":"1","playback_ms":12000,"text":"导数定义没懂"},
+ {"source_id":"2","playback_ms":36000,"text":"为什么分母不能为零？这里怎么约分？"},
+ {"source_id":"3","playback_ms":42000,"text":"老师讲得很清楚，谢谢"},
+ {"source_id":"4","playback_ms":65000,"text":"崩溃了"},
+ {"source_id":"5","playback_ms":80000,"text":"完全跟不上"},
+ {"source_id":"6","playback_ms":90000,"text":"连续为什么不一定可导？"},
+ {"source_id":"7","playback_ms":120000,"text":"因为左右导数不相等，所以这里不可导"},
+ {"source_id":"8","playback_ms":160000,"text":"能不能把板书写大一点？"},
+ {"source_id":"9","playback_ms":180000,"text":"终于懂了，开心"},
+ {"source_id":"10","playback_ms":300000,"text":"这个函数的定义域是什么？"},
+ {"source_id":"11","playback_ms":300000,"text":"这个函数的定义域是什么？"},
+ {"source_id":"12","playback_ms":1000000,"text":"建议补充一个例题"},
+ {"source_id":"13","playback_ms":2000000,"text":"这个公式没懂"},
+ {"source_id":"14","playback_ms":3100000,"text":"为什么要先判断连续？"},
+ {"source_id":"15","playback_ms":3239000,"text":"最后一个例题讲得好"},
+ {"source_id":"15","playback_ms":3239000,"text":"最后一个例题讲得好"},
+ {"source_id":"16","playback_ms":-1,"text":"用于检查拒收的异常时间"},
+ {"source_id":"17","playback_ms":3241000,"text":"用于检查越界时间"}
+]

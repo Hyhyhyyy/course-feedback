@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "evidence_count": 15,
+  "checks": [
+    "synthetic_banner",
+    "all_evidence",
+    "search",
+    "question_source",
+    "review_persistence",
+    "no_js_errors",
+    "mobile_no_overflow"
+  ]
+}
