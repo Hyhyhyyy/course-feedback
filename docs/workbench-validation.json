@@ -1,0 +1,16 @@
+{
+  "comments": 7200,
+  "question_comments": 281,
+  "questions": 288,
+  "positive": 44,
+  "segments": 1506,
+  "frames": 28,
+  "video_range": {
+    "status": 206,
+    "bytes": 1000,
+    "range": "bytes 1000-1999/113473708"
+  },
+  "frame_served": true,
+  "html_export_bytes": 2395101,
+  "review_export": true
+}

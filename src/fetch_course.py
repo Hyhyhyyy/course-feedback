@@ -15,8 +15,17 @@ from course_feedback.pipeline import read_comments, digest
 
 
 def save_json(path,data):
-    path=Path(path);temporary=path.with_suffix(path.suffix+'.tmp')
-    temporary.write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf-8');temporary.replace(path)
+    import uuid
+    path=Path(path);temporary=path.with_name(path.name+'.'+uuid.uuid4().hex+'.tmp')
+    try:
+        temporary.write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf-8')
+        for attempt in range(5):
+            try:temporary.replace(path);break
+            except PermissionError:
+                if attempt==4:raise
+                time.sleep(.025)
+    finally:
+        if temporary.exists():temporary.unlink()
 
 
 def decode_body(body,encoding):

@@ -29,7 +29,7 @@ class BilibiliLogin:
             if urlparse(url).scheme!='https' or urlparse(url).hostname not in ('passport.bilibili.com','account.bilibili.com'):raise ValueError('登录地址校验失败')
             self.key=data['qrcode_key'];self.created=time.monotonic();self.last_poll=0;self.logged_in=False
             self.message='请使用B站App扫码，并在官方界面确认登录'
-            image=qrcode.make(url,image_factory=qrcode.image.svg.SvgPathImage)
+            image=qrcode.make(url,image_factory=qrcode.image.svg.SvgPathFillImage)
             stream=io.BytesIO();image.save(stream)
             return {'qr_image':'data:image/svg+xml;base64,'+base64.b64encode(stream.getvalue()).decode(),
                     'login_url':url,'message':self.message}

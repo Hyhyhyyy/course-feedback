@@ -1,4 +1,6 @@
-# Course Feedback｜课程教学反馈复盘系统
+# 课镜：课程反馈工作台
+
+当前已接通真实素材获取、弹幕分析、完整本地音视频处理、证据回看与教师复核。详见[工作台说明与实测](docs/workbench.md)。运行 `python src/serve_demo.py` 后打开 http://127.0.0.1:8766/ 。
 
 面向Bilibili录播网课的弹幕驱动多模态教学反馈解析系统。通过带播放时间的弹幕、课程转写与关键画面，帮助教师定位问题、保留有效讲解并复盘课程。
 
@@ -18,7 +20,7 @@
 
 本地Qwen3-0.6B也已实际调用并生成报告，但在预设合成用例中将6条非问题误报为问题，未通过语义检查。保留该结果作为调试证据，不作为正式分析模型。
 
-尚未完成指定54分钟B站课程的端到端分析。合成演示不构成实际课程效果证据。实际范围和复现方法见[Demo运行说明](docs/demo-runbook.md)及[试验记录](docs/demo-trial.md)。
+指定54分钟课程现已完成真实获取、完整本地转写取帧、规则反馈报告与复核保存。语义准确率和教学效用仍待独立评价。合成演示用于回归测试。实际范围和复现方法见[Demo运行说明](docs/demo-runbook.md)及[试验记录](docs/demo-trial.md)。
 
 ## 打开真实获取页面
 
@@ -36,7 +38,7 @@ python -m venv .venv
 python src/run_demo.py --comments examples/comments.synthetic.json --transcript examples/transcript.synthetic.json --duration 3240 --title "导数课程复盘 · 合成数据功能演示" --data-kind synthetic --out outputs/synthetic-demo
 ```
 
-运行获取页面后，可从页脚打开该演示。
+运行服务后，可通过 `/example` 单独打开该合成演示。
 
 ## 运行前置检查
 

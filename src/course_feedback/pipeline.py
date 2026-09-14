@@ -100,13 +100,16 @@ def rule_analysis(comment):
     if re.search(r'讲得|讲的|讲解|清楚|清晰|老师|声音|板书|太快|太慢', text): labels.append(LABELS[4])
     if re.search(r'建议|希望|能不能|能否|再讲|慢一点|大一点|补充', text): labels.append(LABELS[5])
     questions = []
-    for part in re.split(r'(?<=[?？。！!；;])', text):
+    for part in re.split(r'(?<=[?？。！!；;])(?![?？。！!；;])', text):
         part = part.strip()
         if QUESTION.search(part):
-            kind = '具体提问' if re.search(r'[?？]|为什么|怎么|如何|能否|能不能', part) else '笼统求助'
+            kind = '具体提问' if re.search(r'为什么|怎么|如何|能否|能不能|[^?？\s][?？]', part) else '笼统求助'
             questions.append({'text': part, 'kind': kind})
+    positive_text = re.sub(r'(?:没|不|未)(?:有|听|看|太|很)?(?:懂|明白|清楚|清晰)了?', '', text)
+    positive = bool(re.search(r'讲得好|讲的好|清楚|清晰|太棒|懂了(?![吗么嘛没?？])|明白了(?![吗么嘛没?？])', positive_text))
+    positive = positive or ('谢谢' in positive_text and not re.search(r'举报|投诉|拉黑', positive_text))
     return {'id': comment['id'], 'labels': labels, 'questions': questions,
-            'positive': bool(re.search(r'讲得好|讲的好|清楚|清晰|谢谢|太棒|懂了|明白了', text)),
+            'positive': positive,
             'method': '规则基线，需人工核查'}
 
 
