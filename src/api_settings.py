@@ -28,11 +28,22 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         raise ValueError('接口重定向已拒绝，请填写官方最终地址')
 
 
+_OPENER = None
+_OPENER_LOCK = threading.Lock()
+
+def get_opener():
+    # Reuse proxy discovery and TLS handler setup across paginated/model calls.
+    global _OPENER
+    with _OPENER_LOCK:
+        if _OPENER is None:_OPENER=urllib.request.build_opener(NoRedirect)
+        return _OPENER
+
+
 def request_json(url, key, body=None):
     req=urllib.request.Request(url, data=json.dumps(body).encode() if body is not None else None,
         headers={'Authorization':'Bearer '+key,'Content-Type':'application/json'})
     try:
-        with urllib.request.build_opener(NoRedirect).open(req, timeout=120) as response:
+        with get_opener().open(req, timeout=120 if body is not None else 20) as response:
             return json.load(response)
     except urllib.error.HTTPError as exc:
         messages={401:'Key 未通过认证',403:'服务拒绝访问或权限不足',404:'接口或模型不存在',429:'限流或配额不足',400:'服务不接受当前参数或模型能力不匹配'}
