@@ -39,10 +39,10 @@ def run_analysis(root, assets, mode, max_seconds=None, provider="local", sample_
             if not record.get('artifacts', {}).get('video'): raise ValueError('尚未获取可验证的音视频')
             model = Path(os.environ.get('COURSE_ASR_MODEL', str(root / 'data/models/whisper-tiny')))
             if not (model / 'model.bin').exists(): raise ValueError('本地转写模型未安装，请设置 COURSE_ASR_MODEL')
-            update(stage='本地音频转写与画面提取', message='处理完整课程；按5分钟分块，可复用已完成分块')
+            update(stage='本地音频转写与画面提取', message='仅处理所选范围，转写与画面变化候选分别保存')
             with (out / 'media-process.log').open('w', encoding='utf-8') as log:
-                completed = subprocess.run([sys.executable, str(root/'src/prepare_media.py'), '--media', str(assets/'course.mp4'),
-                    '--out', str(media_dir), '--model', str(model), '--frame-seconds', '120'], stdout=log, stderr=log)
+                completed = subprocess.run([sys.executable, str(root/'src/course_av.py'), '--media', str(assets/'course.mp4'),
+                    '--out', str(media_dir), '--model', str(model), *(['--max-seconds',str(max_seconds)] if max_seconds is not None else [])], stdout=log, stderr=log)
             if completed.returncode: raise ValueError('音视频处理失败，详见本机 analysis/media-process.log；可重试或选择弹幕分析')
             segments = read_transcript(media_dir / 'transcript.json', duration)
             frames = read_json(media_dir / 'frames.json', [])
@@ -94,7 +94,15 @@ def run_analysis(root, assets, mode, max_seconds=None, provider="local", sample_
                 method_note='本地模型反馈候选；讲解主题、问题概述和综合复盘尚未完成'))
             report = enrich(report, client, media_dir, read_json(out/'syllabus.json'), update)
         update(stage='核验引用与保存报告')
+        if record.get('source_kind')=='platform':
+            report['platform_snapshot']=read_json(assets/'platform-snapshot.json',{})
+            previous=read_json(out/'report.json',{})
+            if previous.get('platform_snapshot',{}).get('sha256')!=report['platform_snapshot'].get('sha256'):
+                review=read_json(out/'review.json',{'notes':'','items':{}})
+                review.update(items={},notice='分析快照已变更，逐条复核标记需要重新确认；文字记录保留')
+                save_json(out/'review.json',review)
         save_json(out/'report.json', report)
+        if (out/'withdrawal.json').exists():(out/'withdrawal.json').unlink()
         update(status='completed', stage='报告已生成', elapsed_s=round(time.perf_counter()-started,3),
                comments=len(comments), questions=len(report['questions']), segments=len(segments), frames=len(frames))
     except Exception as exc:
@@ -111,7 +119,7 @@ def analysis_dir(assets):
 def analysis_status(assets):
     out = analysis_dir(assets)
     state = read_json(out/'state.json', {'status':'idle', 'stage':'尚未分析'})
-    state['report_available'] = (out/'report.json').exists()
+    state['report_available'] = (out/'report.json').exists() and not (out/'withdrawal.json').exists()
     progress = read_json(out/'media/media_run.json')
     if state.get('status') == 'running' and progress:
         state['media_progress'] = {'completed_chunks':len(progress.get('chunks',[])), 'duration_s':progress.get('duration_s'),

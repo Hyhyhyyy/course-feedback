@@ -25,3 +25,4 @@ tokenizers==0.23.2
 tqdm==4.70.1
 typing_extensions==4.16.0
 yt-dlp==2026.8.19
+Pillow==12.3.0

@@ -1,0 +1,38 @@
+{
+  "course_id": "f4e07e0dd48b477188fd7afcc7d4ed9d",
+  "draft_student_denied": true,
+  "published_visible": true,
+  "video_range_206": true,
+  "snapshot_count": 1,
+  "student_analysis_denied": true,
+  "analysis_state": {
+    "status": "completed",
+    "mode": "multimodal",
+    "stage": "报告已生成",
+    "started_at": "2026-09-14T23:36:34.528857+08:00",
+    "message": "处理 0–0 分钟",
+    "accepted": 1,
+    "model_progress": {
+      "completed": 1,
+      "total": 1
+    },
+    "elapsed_s": 35.162,
+    "comments": 1,
+    "questions": 1,
+    "segments": 4,
+    "frames": 1,
+    "report_available": true
+  },
+  "report_counts": {
+    "comments": 1,
+    "questions": 1,
+    "frames": 1,
+    "chapters": 1
+  },
+  "withdrawal_blocks_old_report": true,
+  "remote_without_teacher_consent_rejected": true,
+  "fixture": "15.42秒自制语音与测试画面，两条合成反馈中仅一条同意分析；不是自然学生样本",
+  "unit_tests_passed": 55,
+  "remote_consent_scope": "单元测试覆盖接收服务绑定及地址变化后拒绝旧选择；未向真实远程服务发送平台材料",
+  "http_full_chain": "通过HTTP上传、发布、播放、发送弹幕、启动多模态分析、读取报告及撤回后拒绝旧报告"
+}

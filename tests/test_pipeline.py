@@ -38,7 +38,7 @@ class PipelineTests(unittest.TestCase):
         c,a=read_comments(p,54);self.assertEqual(c[0]['playback_ms'],1250)
         p.write_text('<!DOCTYPE i [<!ENTITY x "bad">]><i/>')
         with self.assertRaises(ValueError):read_comments(p,54)
-    def test_framescope_adapter_and_invalid_segments(self):
+    def test_transcript_adapter_and_invalid_segments(self):
         p=self.write('t.json',{'transcript':{'segments':[{'start':1,'end':2,'text':'导数'}]}})
         self.assertEqual(read_transcript(p,54)[0]['start_ms'],1000)
         p=self.write('t.json',{'segments':[{'start':4,'end':2,'text':'bad'}]})

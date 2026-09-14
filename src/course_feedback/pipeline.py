@@ -76,7 +76,7 @@ def read_comments(path, duration):
 
 
 def read_transcript(path, duration):
-    """Accept FrameScope TranscriptResult or NoteResult JSON; validate every segment."""
+    """Accept timestamped transcript JSON and validate every segment."""
     data = json.loads(Path(path).read_text(encoding='utf-8-sig'))
     data = data.get('transcript', data)
     result = []

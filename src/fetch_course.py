@@ -16,7 +16,10 @@ from course_feedback.pipeline import read_comments, digest
 
 def save_json(path,data):
     import uuid
-    path=Path(path);temporary=path.with_name(path.name+'.'+uuid.uuid4().hex+'.tmp')
+    path=Path(path)
+    import os
+    if os.name=='nt' and not str(path).startswith('\\\\?\\'):path=Path('\\\\?\\'+str(path.resolve()))
+    temporary=path.with_name(path.name+'.'+uuid.uuid4().hex[:8]+'.tmp')
     try:
         temporary.write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf-8')
         for attempt in range(5):
@@ -133,7 +136,7 @@ def fetch(url,out,cookie_file=None,comments_only=False,reuse_existing=False):
 
 def public_summary(log):
     """Allowlist keeps local paths, credential files and raw responses off the page."""
-    return {k:log.get(k) for k in ('status','title','bvid','part','duration_s','observed_at','artifacts','stages','error','elapsed_s','scope','login_state')}
+    return {k:log.get(k) for k in ('source_kind','status','title','bvid','part','duration_s','observed_at','artifacts','stages','error','elapsed_s','scope','login_state')}
 
 
 def main():
