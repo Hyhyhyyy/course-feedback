@@ -51,6 +51,11 @@ def present_report(report,syllabus=None):
                         'frames':len(report.get('frames',[])),
                         'status':'已进行本地音视频处理' if report.get('analysis_mode')=='multimodal' else '尚未进行音视频处理'}
     r['syllabus']=syllabus
+    if r.get('analysis_status') == 'model_preliminary':
+        r['syllabus_stale'] = r.get('syllabus_sha256') != (syllabus['sha256'] if syllabus else None)
+        if r['syllabus_stale']:
+            r.get('model_review', {})['alignment'] = []
+        return r
     r['integrated_evaluation']={'status':'awaiting_model','outline_alignment':PLACEHOLDER,
         'teaching_presentation':PLACEHOLDER,'feedback_interpretation':PLACEHOLDER,'improvement_suggestions':PLACEHOLDER}
     r['analysis_status']='awaiting_model';r['method_note']=PLACEHOLDER

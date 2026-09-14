@@ -17,3 +17,10 @@ pre,code,kbd,samp{font-family:"Times New Roman","STZhongsong","华文中宋",ser
 .model-placeholder{font-size:14px;line-height:1.8;color:var(--muted);font-weight:400;margin:12px 0}.model-label{padding:14px 10px;border-top:1px solid var(--line)}.model-label .model-placeholder{font-size:13px}
 
 .syllabus-intake{margin-top:22px;padding-top:12px;border-top:1px solid var(--line)}.curriculum-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}.frame-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:22px 0}.frame-gallery figure{margin:0;min-width:0}.frame-gallery img{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;border-radius:16px;margin-bottom:10px}.frame-gallery button{font-size:13px;width:100%}@media(max-width:800px){.frame-gallery{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.curriculum-grid{grid-template-columns:1fr}.frame-gallery{grid-template-columns:1fr}}
+.labels button{flex-direction:column}.labels button strong{font-size:30px;line-height:1.2;color:var(--gold);font-weight:500}
+
+select{font:inherit;color:var(--ink);background:#252938;border:1px solid var(--line);border-radius:12px;padding:9px}select option{background:#252938;color:#fff}
+
+.api-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}.api-grid label{display:flex;flex-direction:column;gap:8px}.api-grid input{width:100%}#apiError{color:#efb398}@media(max-width:700px){.api-grid{grid-template-columns:1fr}}
+
+section[id]{scroll-margin-top:110px}

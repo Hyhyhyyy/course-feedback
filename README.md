@@ -77,3 +77,10 @@ flowchart TB
 3. 后期：开展计算机课程迁移及持续试用，根据结果确定推广边界。
 
 项目设计与源码核验见 [接入方案](docs/framescope-integration.md)。数据取得须符合适用的平台条件和研究安排；浏览器登录状态不会自动传递给独立下载程序。
+
+## 本地开源模型工作台
+
+已加入Qwen3.5-4B本地文本与视觉推理管线，运行入口为`start-local-demo.ps1`。配置与权重需按[部署说明](docs/local-model-deployment.md)准备；当前实测状态见项目试验报告。报告标注模型初步分析，保留原始证据和未完成分类记录。操作见[复现说明](docs/demo-runbook.md)，设计见[完整Mermaid调用链](docs/demo-flow.md)。
+
+
+当前默认 API 接入：见 [API 设置与官方模型参考](docs/api-setup.md)。离线100条试跑已完成；校园服务器标为【待真实接入测试】。教师与师生日常辅学定位、专用权重中期计划见 [模型运行方式](docs/inference-modes.md)。

@@ -18,7 +18,7 @@ def read_json(path, default=None):
             time.sleep(.025)
 
 
-def run_analysis(root, assets, mode):
+def run_analysis(root, assets, mode, max_seconds=None, provider="local", sample_size=None):
     started = time.perf_counter()
     out = assets.parent / 'analysis' if assets.name == 'assets' else assets / 'analysis'
     out.mkdir(exist_ok=True)
@@ -47,16 +47,50 @@ def run_analysis(root, assets, mode):
         elif mode == 'imported':
             segments = read_transcript(out / 'imported-transcript.json', duration)
         elif mode != 'text': raise ValueError('未知分析模式')
+        source_count = len(comments)
+        source_duration = duration
+        source_audit = dict(audit)
+        if max_seconds is not None:
+            if type(max_seconds) not in (int, float) or not 0 < max_seconds <= duration:
+                raise ValueError('分析范围无效')
+            duration = max_seconds
+            comments = [c for c in comments if c['playback_ms'] < duration*1000]
+            segments = [s for s in segments if s['end_ms'] <= duration*1000]
+            frames = [f for f in frames if f['requested_time_s'] < duration]
+            audit = dict(raw_count=len(comments), accepted_count=len(comments), duplicate_count=0, rejected_count=0)
+        range_count = len(comments)
+        if sample_size is not None:
+            if type(sample_size) is not int or sample_size < 1:raise ValueError('抽样数量无效')
+            unique = {}
+            for c in sorted(comments, key=lambda c:c['playback_ms']):unique.setdefault(c['text'],c)
+            pool = list(unique.values())
+            n = min(sample_size,len(pool))
+            comments = [pool[round(i*(len(pool)-1)/max(1,n-1))] for i in range(n)]
+            audit = dict(raw_count=len(comments),accepted_count=len(comments),duplicate_count=0,rejected_count=0)
+        audit['source_sha256'] = source_audit.get('source_sha256')
         update(stage='弹幕分类、问题拆分与统计', accepted=len(comments))
-        analyses = [rule_analysis(c) for c in comments]
+        model_config = read_json(root/'data/local-model.json', {})
+        use_model = provider in ('api','campus') or model_config.get('enabled', False)
+        if use_model:
+            from local_model import Client, classify, enrich, status
+            if provider == 'local' and not status()['connected']: raise ValueError('本地模型未就绪，请先启动本地模型服务；未降级为规则分析')
+            client = Client(out/'model-cache', provider)
+            analyses = classify(comments, client, update)
+        else:
+            analyses = [rule_analysis(c) for c in comments]
         course = {'title': record['title'], 'duration_s': duration, 'source_url': record.get('source_url',''),
                   'data_kind': 'real', 'duration_source': '课程元信息，媒体已另行核验' if record.get('artifacts',{}).get('video') else '课程元信息'}
-        report = build_report(course, comments, audit, segments, analyses, 'rules')
+        report = build_report(course, comments, audit, segments, analyses, 'model' if use_model else 'rules')
+        report['analysis_scope'] = dict(start_s=0, end_s=duration, source_duration_s=source_duration, source_comment_count=source_count, selected_comment_count=len(comments), excluded_comment_count=source_count-len(comments), source_audit=source_audit, range_comment_count=range_count, sample_size=sample_size, sampling_method='按原文去重，保留首次播放位置，按时间排序后等间隔选取；仅检验链路，不估计反馈比例' if sample_size else '范围内全部弹幕', transcript_boundary='仅保留结束位置不超过范围终点的转写句段')
         report.update(frames=frames, analysis_mode=mode, observed_at=record.get('observed_at'),
                       method_note='规则基线候选，尚未完成准确率验证；问题概述采用原文摘录，词云使用预设术语表')
         report['summary'] = {'question_comments': sum(bool(c['questions']) for c in report['comments']),
                              'positive_comments': len(report['positive_comment_ids']),
                              'emotion_only': sum('学习情绪' in c['labels'] and not c['questions'] for c in report['comments'])}
+        if use_model:
+            save_json(out/'feedback-stage.json',dict(report,processing_stage='feedback_parsed_before_summaries',
+                method_note='本地模型反馈候选；讲解主题、问题概述和综合复盘尚未完成'))
+            report = enrich(report, client, media_dir, read_json(out/'syllabus.json'), update)
         update(stage='核验引用与保存报告')
         save_json(out/'report.json', report)
         update(status='completed', stage='报告已生成', elapsed_s=round(time.perf_counter()-started,3),

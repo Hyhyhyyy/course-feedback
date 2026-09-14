@@ -63,6 +63,18 @@ def main():
                 if path=='/':return self.send(200,(root/'web/index.html').read_text(encoding='utf-8').replace('__TOKEN__',token).encode(),'text/html; charset=utf-8')
                 if path in ('/app.js','/style.css'):
                     return self.send(200,(root/'web'/path[1:]).read_bytes(),'text/javascript; charset=utf-8' if path.endswith('.js') else 'text/css; charset=utf-8')
+                if path=='/api/model/settings':
+                    from api_settings import public
+                    return self.send(200,public())
+                if path=='/api/model/status':
+                    from local_model import status
+                    from model_providers import settings
+                    profiles={}
+                    for name in ('api','local','campus'):
+                        try:
+                            cfg=settings(name);profiles[name]={'configured':True,'model':cfg['model']}
+                        except ValueError:profiles[name]={'configured':False}
+                    return self.send(200,dict(status(),profiles=profiles))
                 if path=='/api/courses':
                     result=[]
                     for record in [root/'outputs/real-acquisition/acquisition.json',*jobs.glob('*/assets/acquisition.json')]:
@@ -130,6 +142,16 @@ def main():
                 n=int(self.headers.get('Content-Length','0'))
                 if not 0<n<8*1024*1024:raise ValueError('请求大小无效')
                 data=json.loads(self.rfile.read(n))
+                if self.path.startswith('/api/model/'):
+                    import api_settings
+                    actions={'configure':lambda:api_settings.configure(data),'models':api_settings.models,
+                        'select':lambda:api_settings.select_model(data),'probe':api_settings.probe,
+                        'balance':api_settings.balance,'clear':api_settings.clear}
+                    action=self.path.rsplit('/',1)[-1]
+                    if action not in actions:return self.send(404,{'error':'未知模型操作'})
+                    if any(t.is_alive() for t in analysis_workers.values()):return self.send(409,{'error':'分析进行中，请结束后操作模型设置'})
+                    try:return self.send(200,actions[action]())
+                    except ValueError as exc:return self.send(400,{'error':str(exc)})
                 if self.path=='/api/login/start':return self.send(200,login.start())
                 if self.path=='/api/login/poll':return self.send(200,login.poll())
                 if self.path=='/api/login/clear':return self.send(200,login.clear())
@@ -161,8 +183,14 @@ def main():
                                     if temp.exists():temp.unlink()
                                 mode='imported'
                             if mode not in ('text','multimodal','imported'):raise ValueError('分析模式无效')
+                            provider=data.get('provider','api')
+                            from model_providers import settings
+                            settings(provider)
+                            limit=data.get('max_seconds')
+                            if limit is not None and (type(limit) is not int or not 0 < limit <= read_json(assets/'acquisition.json')['duration_s']):raise ValueError('分析范围无效')
+                            if data.get('sample_size') not in (None,100):raise ValueError('抽样数量无效')
                             save_json(out/'state.json',{'status':'running','stage':'任务准备中','mode':mode})
-                            thread=threading.Thread(target=run_analysis,args=(root,assets,mode),daemon=True);analysis_workers[jid]=thread;thread.start()
+                            thread=threading.Thread(target=run_analysis,args=(root,assets,mode,limit,provider,data.get('sample_size')),daemon=True);analysis_workers[jid]=thread;thread.start()
                         return self.send(202,{'id':jid})
                     return self.send(404,{'error':'未找到操作'})
                 if self.path!='/api/acquire':return self.send(404,{'error':'未找到'})
