@@ -33,6 +33,28 @@ class AcquisitionTests(unittest.TestCase):
         with patch.object(login,'request',side_effect=[{'code':0,'data':{'code':0}},{'code':0,'data':{'isLogin':True}}]):
             self.assertTrue(login.poll()['logged_in'])
         self.assertFalse(login.clear()['logged_in'])
+    def test_profile_allowlist_and_expired_session(self):
+        login=BilibiliLogin()
+        login.accept_nav({'code':0,'data':{'isLogin':True,'uname':'测试账号','mid':123,'level_info':{'current_level':5},'money':99,'cookie':'secret'}})
+        self.assertEqual(login.status()['profile'],{'name':'测试账号','uid':'123','level':5})
+        self.assertNotIn('secret',json.dumps(login.status()))
+        login.last_check=0
+        with patch.object(login,'request',return_value={'code':-101}):state=login.refresh()
+        self.assertEqual(state['state'],'expired');self.assertIsNone(state['profile'])
+        self.assertFalse(state['logged_in'])
+    def test_scan_confirmation_and_qr_expiry(self):
+        login=BilibiliLogin();login.key='test';login.created=__import__('time').monotonic()
+        with patch.object(login,'request',return_value={'code':0,'data':{'code':86090,'message':'请确认'}}):
+            self.assertEqual(login.poll()['state'],'waiting_confirm')
+        self.assertFalse(login.status()['logged_in'])
+        login.created-=181
+        self.assertEqual(login.status()['state'],'qr_expired')
+        self.assertIsNone(login.key)
+    def test_network_error_does_not_claim_expired_or_connected(self):
+        login=BilibiliLogin()
+        with patch.object(login,'request',side_effect=OSError('network')):state=login.refresh()
+        self.assertEqual(state['state'],'verification_failed')
+        self.assertFalse(state['logged_in'])
 
 
 if __name__=='__main__':unittest.main()

@@ -131,6 +131,7 @@ def main():
                 if self.path=='/api/login/start':return self.send(200,login.start())
                 if self.path=='/api/login/poll':return self.send(200,login.poll())
                 if self.path=='/api/login/clear':return self.send(200,login.clear())
+                if self.path=='/api/login/refresh':return self.send(200,login.refresh())
                 if self.path.startswith('/api/workbench/'):
                     parts=self.path.split('/');jid=parts[3];assets=folder(jid);out=analysis_dir(assets);out.mkdir(exist_ok=True);action=parts[4]
                     if not (assets/'acquisition.json').exists():raise ValueError('无素材记录')
