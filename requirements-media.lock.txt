@@ -20,6 +20,7 @@ onnxruntime==1.30.0
 packaging==26.3
 protobuf==7.36.1
 PyYAML==6.0.3
+qrcode==8.2
 tokenizers==0.23.2
 tqdm==4.70.1
 typing_extensions==4.16.0

@@ -1,3 +1,4 @@
 faster-whisper==1.2.1
 imageio-ffmpeg==0.6.0
 yt-dlp
+qrcode==8.2

@@ -12,20 +12,31 @@
 
 已验证：JSON/CSV/XML弹幕导入、FrameScope结构转写导入、规则基线问题解析、计数与引用核验、交互报告、单条证据查看及教师记录保存。合成数据18条中有效15条、重复请求1条、异常2条，产生10个问题单元。本地Whisper tiny已在合成中文语音上实际推理，视频测试完成分块及取帧。
 
-已编写、待真实目标课程验证：yt-dlp素材取得连接器、模型标注接口、一键任务编排和链接输入首页。尚未实现网页登录自动同步、分片弹幕完整性保证、知识点自动分段、视觉语义核查及自动教学改进判定。
+已实测前端“获取数据”：目标课程BV1Y2DGYoEEw取得7200条带时间戳弹幕及1080p含音轨视频，57.652秒完成。获取目标为当次可用快照。官方扫码登录入口已加入并验证二维码生成，真人确认后的会话接续待用户扫码验证。详见[真实获取记录](docs/real-acquisition.md)。
+
+尚未完成：真实课程的模型分析、知识点自动分段、视觉语义核查及自动教学改进判定。当前主按钮仅获取数据，不直接启动分析。
 
 本地Qwen3-0.6B也已实际调用并生成报告，但在预设合成用例中将6条非问题误报为问题，未通过语义检查。保留该结果作为调试证据，不作为正式分析模型。
 
 尚未完成指定54分钟B站课程的端到端分析。合成演示不构成实际课程效果证据。实际范围和复现方法见[Demo运行说明](docs/demo-runbook.md)及[试验记录](docs/demo-trial.md)。
 
-## 立即运行已验证的演示
+## 打开真实获取页面
+
+```powershell
+python -m venv .venv
+.venv/Scripts/python.exe -m pip install -r requirements-media.txt
+.venv/Scripts/python.exe src/serve_demo.py
+```
+
+打开 `http://127.0.0.1:8766`，输入B站完整视频链接，按需登录后点击“获取数据”。无需配置分析模型。会话不自动继承其他浏览器登录状态，用户可通过页面内官方扫码流程连接。
+
+## 运行合成数据报告演示
 
 ```bash
 python src/run_demo.py --comments examples/comments.synthetic.json --transcript examples/transcript.synthetic.json --duration 3240 --title "导数课程复盘 · 合成数据功能演示" --data-kind synthetic --out outputs/synthetic-demo
-python src/serve_demo.py
 ```
 
-打开 `http://127.0.0.1:8766`。首页提供课程链接输入和演示报告入口；实际在线任务需先完成本地配置。
+运行获取页面后，可从页脚打开该演示。
 
 ## 运行前置检查
 
