@@ -27,6 +27,8 @@ def run_analysis(root, assets, mode, max_seconds=None, provider="local", sample_
         state.update(values); save_json(out / 'state.json', state)
     update()
     try:
+        from model_access import require_ready
+        require_ready(provider,mode)
         record = read_json(assets / 'acquisition.json')
         duration = record['duration_s']
         comments, audit = read_comments(assets / 'course.danmaku.xml', duration)
@@ -96,6 +98,9 @@ def run_analysis(root, assets, mode, max_seconds=None, provider="local", sample_
         update(status='completed', stage='报告已生成', elapsed_s=round(time.perf_counter()-started,3),
                comments=len(comments), questions=len(report['questions']), segments=len(segments), frames=len(frames))
     except Exception as exc:
+        if provider=='api':
+            from api_settings import invalidate
+            invalidate('模型分析未完成，请排查后重新验证：'+str(exc))
         update(status='failed', stage='分析未完成', error=str(exc), elapsed_s=round(time.perf_counter()-started,3))
 
 
@@ -106,6 +111,7 @@ def analysis_dir(assets):
 def analysis_status(assets):
     out = analysis_dir(assets)
     state = read_json(out/'state.json', {'status':'idle', 'stage':'尚未分析'})
+    state['report_available'] = (out/'report.json').exists()
     progress = read_json(out/'media/media_run.json')
     if state.get('status') == 'running' and progress:
         state['media_progress'] = {'completed_chunks':len(progress.get('chunks',[])), 'duration_s':progress.get('duration_s'),

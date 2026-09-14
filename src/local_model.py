@@ -139,7 +139,7 @@ def classify(comments, client, update):
             results.append({'id': c['id'], 'labels': labels, 'questions': questions, 'positive': '积极表达' in tags,
                             'uncertain': '语义不明' in tags or i in unresolved, 'model_unresolved':i in unresolved,
                             'rule_recovered_questions': recovered,
-                            'method': '模型未完成分类；仅保留原文和显式疑问候选，需人工处理' if i in unresolved else '本地Qwen3.5初步分析＋显式疑问补查；待人工复核'})
+                            'method': '模型未完成分类；仅保留原文和显式疑问候选，需人工处理' if i in unresolved else f"{getattr(client,'provider','model')} / {getattr(client,'model','模型')}初步分析＋显式疑问补查；待人工复核"})
     by_text = {c['text']: next(r for r in results if r['id']==c['id']) for c in ordered}
     update(model_progress={'completed':len(ordered),'total':len(ordered)})
     return [dict(by_text[c['text']], id=c['id']) for c in comments]

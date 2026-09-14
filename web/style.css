@@ -24,3 +24,7 @@ select{font:inherit;color:var(--ink);background:#252938;border:1px solid var(--l
 .api-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}.api-grid label{display:flex;flex-direction:column;gap:8px}.api-grid input{width:100%}#apiError{color:#efb398}@media(max-width:700px){.api-grid{grid-template-columns:1fr}}
 
 section[id]{scroll-margin-top:110px}
+
+#modelDialog{width:min(1050px,94vw);max-height:90vh;padding:0;overflow:auto;background:#19243a;color:var(--ink);border:1px solid var(--line);border-radius:24px}#modelDialog .panel{margin:0;border:0}#modelDialog::backdrop{background:rgba(4,12,25,.75);backdrop-filter:blur(8px)}[hidden]{display:none!important}.model-access{display:inline-flex;gap:8px;align-items:center;padding:9px 13px}.model-access[data-state=ready]{border-color:#79c9a0;color:#adf0cb}.model-access[data-state=locked]{border-color:#d0a16b;color:#f0c99d}button:disabled{opacity:.4;cursor:not-allowed}#modelLockReason{padding:12px 16px;border-left:3px solid var(--gold)}
+
+.report-notice{border:1px solid #c7a36c;border-radius:12px;padding:12px 16px;color:#e3c395}

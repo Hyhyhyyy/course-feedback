@@ -26,6 +26,7 @@ if(modelReady)$('contentIndexNote').textContent='以下为转写原文；主题�
 $('badge').textContent=(R.course.data_kind==='synthetic'?'合成测试材料 · ':'')+(modelReady?R.method_note:MODEL_PLACEHOLDER);
 if(R.synthetic_semantic_check&&!R.synthetic_semantic_check.passed)$('badge').textContent+=' / 未通过语义检查，仅供调试';
 if(R.analysis_scope){const sc=R.analysis_scope;document.querySelector('header').append(el('p','分析范围 00:00–'+Math.floor(sc.end_s/60)+':'+String(Math.round(sc.end_s%60)).padStart(2,'0')+'；纳入 '+sc.selected_comment_count+' / '+sc.source_comment_count+' 条已取得弹幕。'+(sc.sample_size?'抽样试跑，不代表范围内反馈比例。':'范围外内容未评价。'),'sub'));}
+if(R.report_notice)document.querySelector('header').append(el('p',R.report_notice,'report-notice'));
 const metrics=[['分析范围时长',Math.round(R.course.duration_s/60)+' 分钟'],['有效弹幕',R.comments.length+' 条'],['已识别问题',modelReady?R.question_count+' 个候选':MODEL_PLACEHOLDER],['讲解分析',modelReady?(R.chapters||[]).length+' 个主题窗':MODEL_PLACEHOLDER]];
 for(const [name,n] of metrics){let d=el('div',undefined,'number');d.append(el('strong',n),el('span',name));$('numbers').append(d)}
 function show(ids,title){$('dialogTitle').textContent=title;$('evidence').replaceChildren();const unique=[...new Set(ids)];

@@ -27,6 +27,15 @@ def main():
         if jid=='real-acquisition':return root/'outputs/real-acquisition'
         if len(jid)!=32 or any(c not in '0123456789abcdef' for c in jid):raise ValueError('任务编号无效')
         return jobs/jid/'assets'
+    def saved_report(assets):
+        out=analysis_dir(assets)
+        report=read_json(out/'report.json')
+        if report is None:raise ValueError('尚无已生成报告')
+        report=present_report(report,read_json(out/'syllabus.json'))
+        attempt=analysis_status(assets)
+        report['last_attempt_status']=attempt.get('status')
+        report['report_notice']='' if attempt.get('status')=='completed' else '当前显示上次已生成报告；最近一次分析'+('仍在进行' if attempt.get('status')=='running' else '未完成')+'，不代表本次请求成功。'
+        return report
     class Handler(BaseHTTPRequestHandler):
         def log_message(self,*args):pass
         def send(self,status,data,kind='application/json; charset=utf-8',attachment=False):
@@ -63,6 +72,9 @@ def main():
                 if path=='/':return self.send(200,(root/'web/index.html').read_text(encoding='utf-8').replace('__TOKEN__',token).encode(),'text/html; charset=utf-8')
                 if path in ('/app.js','/style.css'):
                     return self.send(200,(root/'web'/path[1:]).read_bytes(),'text/javascript; charset=utf-8' if path.endswith('.js') else 'text/css; charset=utf-8')
+                if path=='/api/model/readiness':
+                    from model_access import readiness
+                    return self.send(200,readiness(parse_qs(parsed.query).get('provider',['api'])[0]))
                 if path=='/api/model/settings':
                     from api_settings import public
                     return self.send(200,public())
@@ -88,8 +100,8 @@ def main():
                     if action=='review':return self.send(200,read_json(out/'review.json',{'notes':'','items':{}}))
                     if action=='syllabus':return self.send(200,{'syllabus':read_json(out/'syllabus.json')})
                     if action=='report':
-                        if analysis_status(assets)['status']!='completed':return self.send(409,{'error':'本次分析尚未完成'})
-                        return self.send(200,present_report(read_json(out/'report.json'),read_json(out/'syllabus.json')))
+                        if not (out/'report.json').exists():return self.send(409,{'error':'尚无已生成报告'})
+                        return self.send(200,saved_report(assets))
                     if action=='video':return self.media(assets/'course.mp4')
                     if action=='frame':
                         index=int(parse_qs(parsed.query).get('index',['0'])[0]);manifest=read_json(out/'media/frames.json',[])
@@ -98,8 +110,8 @@ def main():
                         if not image.is_relative_to((out/'media').resolve()) or image.suffix!='.jpg':raise ValueError('无效画面')
                         return self.send(200,image.read_bytes(),'image/jpeg')
                     if action in ('export','html'):
-                        if analysis_status(assets)['status']!='completed':return self.send(409,{'error':'本次报告尚未完成'})
-                        report=present_report(read_json(out/'report.json'),read_json(out/'syllabus.json'));report['teacher_review']=read_json(out/'review.json',{'notes':'','items':{}})
+                        if not (out/'report.json').exists():return self.send(409,{'error':'尚无已生成报告'})
+                        report=saved_report(assets);report['teacher_review']=read_json(out/'review.json',{'notes':'','items':{}})
                         if action=='html':
                             from workbench import export_html
                             return self.send(200,export_html(root,report,out/'media').encode(),'text/html; charset=utf-8',attachment='course-feedback.html')
@@ -146,7 +158,7 @@ def main():
                     import api_settings
                     actions={'configure':lambda:api_settings.configure(data),'models':api_settings.models,
                         'select':lambda:api_settings.select_model(data),'probe':api_settings.probe,
-                        'balance':api_settings.balance,'clear':api_settings.clear}
+                        'balance':api_settings.balance,'clear':api_settings.clear,'probe-vision':lambda:api_settings.probe(True)}
                     action=self.path.rsplit('/',1)[-1]
                     if action not in actions:return self.send(404,{'error':'未知模型操作'})
                     if any(t.is_alive() for t in analysis_workers.values()):return self.send(409,{'error':'分析进行中，请结束后操作模型设置'})
@@ -173,6 +185,9 @@ def main():
                         with lock:
                             if any(t.is_alive() for t in analysis_workers.values()):return self.send(409,{'error':'已有分析任务进行中，请等待完成'})
                             mode=data.get('mode','text')
+                            from model_access import require_ready
+                            try:require_ready(data.get('provider','api'),'imported' if action=='import' else mode)
+                            except ValueError as exc:return self.send(409,{'error':str(exc)})
                             if action=='import':
                                 temp=out/'import-check.json';save_json(temp,data.get('transcript',{}))
                                 try:

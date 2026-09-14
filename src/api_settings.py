@@ -1,5 +1,9 @@
 """Session-only API credentials, official model discovery and usage accounting."""
 import datetime
+import time
+import base64
+import struct
+import zlib
 import json
 import threading
 import urllib.error
@@ -16,7 +20,7 @@ PRESETS = {
 }
 LOCK = threading.RLock()
 CONFIG = None
-STATE = dict(key_status='尚未验证', models=[], checked_at=None, balance='未查询', requests=0, input_tokens=0, output_tokens=0, missing_usage=0)
+STATE = dict(text_verified_until=0, vision_verified_until=0, key_status='尚未验证', models=[], checked_at=None, balance='未查询', requests=0, input_tokens=0, output_tokens=0, missing_usage=0)
 
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -32,9 +36,11 @@ def request_json(url, key, body=None):
             return json.load(response)
     except urllib.error.HTTPError as exc:
         messages={401:'Key 未通过认证',403:'服务拒绝访问或权限不足',404:'接口或模型不存在',429:'限流或配额不足',400:'服务不接受当前参数或模型能力不匹配'}
-        raise ValueError(messages.get(exc.code,'服务返回 HTTP '+str(exc.code))) from None
+        invalidate(messages.get(exc.code,'服务返回 HTTP '+str(exc.code)))
+        raise ValueError(STATE['key_status']) from None
     except (urllib.error.URLError,TimeoutError):
-        raise ValueError('服务连接失败或超时，请核对地址与网络') from None
+        invalidate('服务连接失败或超时，请核对地址与网络')
+        raise ValueError(STATE['key_status']) from None
 
 
 def configure(data):
@@ -51,7 +57,7 @@ def configure(data):
     with LOCK:
         CONFIG=dict(vendor=vendor,url=url,key=key,model=model,format=data.get('format','json_object'))
         if CONFIG['format'] not in ('json_object','json_schema'):raise ValueError('输出格式无效')
-        STATE.update(key_status='已保存到本次服务内存，尚未验证',models=[],checked_at=None,balance='未查询',requests=0,input_tokens=0,output_tokens=0,missing_usage=0)
+        STATE.update(text_verified_until=0,vision_verified_until=0,key_status='已保存到本次服务内存，尚未验证',models=[],checked_at=None,balance='未查询',requests=0,input_tokens=0,output_tokens=0,missing_usage=0)
     return public()
 
 
@@ -74,7 +80,7 @@ def clear():
     global CONFIG
     with LOCK:
         CONFIG=None
-        STATE.update(key_status='已清除',models=[],checked_at=None,balance='未查询',requests=0,input_tokens=0,output_tokens=0,missing_usage=0)
+        STATE.update(text_verified_until=0,vision_verified_until=0,key_status='已清除',models=[],checked_at=None,balance='未查询',requests=0,input_tokens=0,output_tokens=0,missing_usage=0)
     return public()
 
 
@@ -110,7 +116,8 @@ def models():
         ids=sorted({m['id'] for m in rows if isinstance(m,dict) and isinstance(m.get('id'),str)})
         with LOCK:STATE.update(models=ids,key_status='模型列表请求成功；所选模型推理权限尚待验证',checked_at=datetime.datetime.now().astimezone().isoformat())
     except ValueError as exc:
-        with LOCK:STATE.update(key_status=str(exc),models=[])
+        invalidate(str(exc))
+        with LOCK:STATE['models']=[]
         raise
     return public()
 
@@ -120,24 +127,33 @@ def select_model(data):
     if not model or len(model)>200:raise ValueError('模型 ID 无效')
     with LOCK:
         snapshot(False)
+        if CONFIG['model']!=model:invalidate('模型已更改，请重新验证')
         CONFIG['model']=model
         STATE['key_status']='模型已选择，推理尚待验证'
     return public()
 
 
-def probe():
+def probe(vision=False):
     cfg=snapshot()
     # Only synthetic material is sent by this explicit, potentially billable test.
     body={'model':cfg['model'],'messages':[{'role':'user','content':'只返回 JSON 对象：{"ok":true}'}], 'max_tokens':256,'response_format':{'type':'json_object'}}
+    if vision:
+        def chunk(kind,data):return struct.pack('!I',len(data))+kind+data+struct.pack('!I',zlib.crc32(kind+data)&0xffffffff)
+        png=b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('!2I5B',32,32,8,2,0,0,0))+chunk(b'IDAT',zlib.compress((b'\0'+b'\xff'*96)*32))+chunk(b'IEND',b'')
+        body['messages'][0]['content']=[{'type':'text','text':'请确认收到图片，只返回 JSON 对象：{"ok":true}'},{'type':'image_url','image_url':{'url':'data:image/png;base64,'+base64.b64encode(png).decode()}}]
+    if cfg.get('vendor')=='bailian':body['enable_thinking']=False
     try:
         result=request_json(cfg['url']+'/chat/completions',cfg['key'],body)
         record_usage(result.get('usage'))
         choice=result['choices'][0]
         if choice.get('finish_reason')!='stop' or json.loads(choice['message']['content']).get('ok') is not True:
             raise ValueError('请求已返回，但 JSON 输出探测未通过；不能据此认定 Key 无效')
-        with LOCK:STATE.update(key_status='Key 与所选模型文本调用已验证；视觉与完整任务待测试',checked_at=datetime.datetime.now().astimezone().isoformat())
+        with LOCK:
+            if CONFIG!=cfg:raise ValueError('验证期间配置已更改，请重新验证')
+            STATE.update(text_verified_until=time.time()+900,key_status='图文接口已验证，可进行音视频辅助分析' if vision else '文本接口已验证；音视频分析还需图文验证',checked_at=datetime.datetime.now().astimezone().isoformat())
+            if vision:STATE['vision_verified_until']=time.time()+900
     except (ValueError,KeyError,IndexError) as exc:
-        with LOCK:STATE['key_status']=str(exc) if isinstance(exc,ValueError) else '模型响应结构不兼容'
+        invalidate(str(exc) if isinstance(exc,ValueError) else '模型响应结构不兼容')
         raise ValueError(STATE['key_status']) from None
     return public()
 
@@ -154,3 +170,16 @@ def balance():
     else:value='当前厂商未接入余额接口，请查看官方控制台；不以 Token 数推算账户余额'
     with LOCK:STATE['balance']=value
     return public()
+
+
+def invalidate(reason):
+    with LOCK:STATE.update(text_verified_until=0,vision_verified_until=0,key_status=reason)
+
+
+def readiness():
+    with LOCK:
+        text=bool(CONFIG and STATE['text_verified_until']>time.time())
+        vision=bool(text and STATE['vision_verified_until']>time.time())
+        reason=STATE['key_status'] if not text else ('已验证文本与图文接口' if vision else '文本已就绪；图文接口尚未验证')
+        if CONFIG and not text and STATE['text_verified_until']:reason='验证已过期，请重新验证连接'
+        return dict(text_ready=text,vision_ready=vision,reason=reason,model=CONFIG['model'] if CONFIG else '',valid_until=STATE['text_verified_until'])
