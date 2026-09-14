@@ -1,0 +1,14 @@
+{
+  "vendor": "bailian",
+  "model": "qwen-plus",
+  "key_status": "Key 与所选模型文本调用已验证；视觉与完整任务待测试",
+  "checked_at": "2026-09-14T21:17:54.351008+08:00",
+  "requests": 1,
+  "input_tokens": 21,
+  "output_tokens": 5,
+  "balance": "当前厂商未接入余额接口，请查看官方控制台；不以 Token 数推算账户余额",
+  "model_count": 174,
+  "sent_course_material": false,
+  "probe_input": "只返回 JSON 对象：{\"ok\":true}",
+  "scope": "模型目录与单条合成文本调用；不是课程全链路准确性测试"
+}

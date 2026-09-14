@@ -97,7 +97,7 @@ Whisper tiny对高数术语和公式存在明显误识别；一次视觉抽样�
 
 ## 文件与复现
 
-源码工作台入口为[source/course-feedback](../source/course-feedback)，运行`start-local-demo.ps1`后打开本机8766页面。选择已有54分钟课程，或在登录后重新获取当前快照，选择离线本地分析、前5分钟与100条抽样，再生成报告。API为页面默认主要方式，未配置时不会自动调用；校园服务与专用训练权重尚待部署及验证，详见[运行方式设计](../source/course-feedback/docs/inference-modes.md)。配置、失败恢复及导出方式见[操作说明](../source/course-feedback/docs/demo-runbook.md)。
+源码工作台入口为[source/course-feedback](../source/course-feedback)，运行`start-local-demo.ps1`后打开本机8766页面。选择已有54分钟课程，或在登录后重新获取当前快照，选择离线本地分析、前5分钟与100条抽样，再生成报告。API为页面默认主要方式；百炼已真实返回174个模型，qwen-plus通过单条合成JSON调用，实际输入21、输出5 Token，未发送课程材料；校园服务与专用训练权重尚待部署及验证，详见[运行方式设计](../source/course-feedback/docs/inference-modes.md)。配置、失败恢复及导出方式见[操作说明](../source/course-feedback/docs/demo-runbook.md)。
 
 本次真实任务编号为`d1150d3d51de4597b510077f7628a6ba`。该任务的`assets`保存素材，`analysis/media`保存转写和画面，`analysis/model-cache`保存模型证据，`analysis/report.json`保存当前报告。已有失败和合成试验作为必要溯源材料保留，不作为当前实测成功证据；当前说明和图直接更新，未另存历史版本。
 
