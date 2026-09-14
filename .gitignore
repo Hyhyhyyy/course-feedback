@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*cookies*
+__pycache__/
+*.py[cod]
+.venv/
+node_modules/
+data/
+outputs/
+*.db
+*.db-*
+*.log
+.DS_Store
