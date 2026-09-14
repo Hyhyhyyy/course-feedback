@@ -12,6 +12,7 @@ from fetch_course import fetch,public_summary,save_json
 from bilibili_login import BilibiliLogin
 from workbench import run_analysis,analysis_dir,analysis_status,read_json
 from course_feedback.pipeline import read_transcript
+from syllabus import parse_upload,present_report
 
 
 def main():
@@ -73,9 +74,10 @@ def main():
                     parts=path.split('/');assets=folder(parts[3]);out=analysis_dir(assets);action=parts[4]
                     if action=='status':return self.send(200,analysis_status(assets))
                     if action=='review':return self.send(200,read_json(out/'review.json',{'notes':'','items':{}}))
+                    if action=='syllabus':return self.send(200,{'syllabus':read_json(out/'syllabus.json')})
                     if action=='report':
                         if analysis_status(assets)['status']!='completed':return self.send(409,{'error':'本次分析尚未完成'})
-                        return self.send(200,read_json(out/'report.json'))
+                        return self.send(200,present_report(read_json(out/'report.json'),read_json(out/'syllabus.json')))
                     if action=='video':return self.media(assets/'course.mp4')
                     if action=='frame':
                         index=int(parse_qs(parsed.query).get('index',['0'])[0]);manifest=read_json(out/'media/frames.json',[])
@@ -85,10 +87,10 @@ def main():
                         return self.send(200,image.read_bytes(),'image/jpeg')
                     if action in ('export','html'):
                         if analysis_status(assets)['status']!='completed':return self.send(409,{'error':'本次报告尚未完成'})
-                        report=read_json(out/'report.json');report['teacher_review']=read_json(out/'review.json',{'notes':'','items':{}})
+                        report=present_report(read_json(out/'report.json'),read_json(out/'syllabus.json'));report['teacher_review']=read_json(out/'review.json',{'notes':'','items':{}})
                         if action=='html':
                             from workbench import export_html
-                            return self.send(200,export_html(root,report).encode(),'text/html; charset=utf-8',attachment='course-feedback.html')
+                            return self.send(200,export_html(root,report,out/'media').encode(),'text/html; charset=utf-8',attachment='course-feedback.html')
                         return self.send(200,report,attachment='course-feedback.json')
                 if path=='/api/login/status':return self.send(200,login.status())
                 if path=='/api/acquisition/latest':
@@ -135,6 +137,10 @@ def main():
                 if self.path.startswith('/api/workbench/'):
                     parts=self.path.split('/');jid=parts[3];assets=folder(jid);out=analysis_dir(assets);out.mkdir(exist_ok=True);action=parts[4]
                     if not (assets/'acquisition.json').exists():raise ValueError('无素材记录')
+                    if action=='syllabus':
+                        with lock:
+                            document=parse_upload(data);save_json(out/'syllabus.json',document)
+                        return self.send(200,{'syllabus':document,'saved':True})
                     if action=='review':
                         if not isinstance(data.get('notes'),str) or len(data['notes'])>50000:raise ValueError('记录过长')
                         items=data.get('items',{})

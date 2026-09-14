@@ -79,9 +79,18 @@ def analysis_status(assets):
     return state
 
 
-def export_html(root, report):
+def export_html(root, report, media_dir=None):
     import re
+    import base64
     data=dict(report,frames=[])
+    if media_dir:
+        for f in report.get('frames',[]):
+            path=(media_dir/f['file']).resolve()
+            if not path.is_relative_to(media_dir.resolve()) or path.suffix.lower()!='.jpg':continue
+            body=path.read_bytes()
+            if len(body)>2*1024*1024 or not body.startswith(b'\xff\xd8'):continue
+            data['frames'].append({'id':f['id'],'time_ms':round(f['requested_time_s']*1000),
+                'data_url':'data:image/jpeg;base64,'+base64.b64encode(body).decode(),'note':'按播放位置提取的课程画面'})
     template=(root/'web/report.html').read_text(encoding='utf-8')
     style=(root/'web/style.css').read_text(encoding='utf-8')
     style+='''header{padding:32px max(24px,calc((100vw - 1180px)/2));background:transparent}header small,.sub{color:var(--muted)}main{padding-top:24px}.numbers{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.number{padding:20px;border:1px solid var(--line);border-radius:24px;background:rgba(255,255,255,.06)}.number strong{display:block;color:var(--gold);font-size:30px}.label b{display:block;color:var(--gold);font-size:27px}.bar{flex:1;min-width:0;padding:0;border:0;background:rgba(255,255,255,.35)}.badge,.tag{color:var(--muted)}.positive{border-left:0}.evidence blockquote{background:transparent;border:0}.action{font-size:13px}.two>.panel{overflow:auto}@media(max-width:700px){.numbers{grid-template-columns:1fr 1fr}}'''
