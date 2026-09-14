@@ -1,0 +1,66 @@
+[
+  {
+    "model": "Qwen/Qwen3.8-27B",
+    "url": "https://huggingface.co/Qwen/Qwen3.8-27B/raw/main/README.md",
+    "file": "Qwen__Qwen3.8-27B.md",
+    "sha256": "57E4BDB258EE1A7D2635C5174EBD4E56ABE392505CDB5F8BBB356B0DC4293641",
+    "retrieved_at": "2026-09-11T02:33:51.9889877+08:00",
+    "status": "saved"
+  },
+  {
+    "model": "Qwen/Qwen3-ASR-1.7B",
+    "url": "https://huggingface.co/Qwen/Qwen3-ASR-1.7B/raw/main/README.md",
+    "file": "Qwen__Qwen3-ASR-1.7B.md",
+    "sha256": "5058416891BC47A2051557765997E8C42F8EB78A0E33C3E775BD17D4B0BA4D50",
+    "retrieved_at": "2026-09-11T02:33:52.7529264+08:00",
+    "status": "saved"
+  },
+  {
+    "model": "Qwen/Qwen3-ForcedAligner-0.6B",
+    "url": "https://huggingface.co/Qwen/Qwen3-ForcedAligner-0.6B/raw/main/README.md",
+    "file": "Qwen__Qwen3-ForcedAligner-0.6B.md",
+    "sha256": "5058416891BC47A2051557765997E8C42F8EB78A0E33C3E775BD17D4B0BA4D50",
+    "retrieved_at": "2026-09-11T02:33:53.6114130+08:00",
+    "status": "saved"
+  },
+  {
+    "model": "PaddlePaddle/PaddleOCR-VL-1.6",
+    "url": "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6/raw/main/README.md",
+    "file": "PaddlePaddle__PaddleOCR-VL-1.6.md",
+    "sha256": "D6C5B77A660577F6E18021DEFCCD835BDC93A8C6538F5A479D597F3E94288ABF",
+    "retrieved_at": "2026-09-11T02:33:54.3412550+08:00",
+    "status": "saved"
+  },
+  {
+    "model": "Qwen/Qwen3-Embedding-0.6B",
+    "url": "https://huggingface.co/Qwen/Qwen3-Embedding-0.6B/raw/main/README.md",
+    "file": "Qwen__Qwen3-Embedding-0.6B.md",
+    "sha256": "C34D9B7E5A267AD3FDD13227A253686BC90844FF4744A2A6A86C7C905E3D06F3",
+    "retrieved_at": "2026-09-11T02:33:55.0655725+08:00",
+    "status": "saved"
+  },
+  {
+    "model": "Qwen/Qwen3-Reranker-0.6B",
+    "url": "https://huggingface.co/Qwen/Qwen3-Reranker-0.6B/raw/main/README.md",
+    "file": "Qwen__Qwen3-Reranker-0.6B.md",
+    "sha256": "5BBA8C734F6DD3AE48317B4139317E45A7FCE48FC55E15670B23A0DD15492AB6",
+    "retrieved_at": "2026-09-11T02:33:55.7847560+08:00",
+    "status": "saved"
+  },
+  {
+    "model": "openbmb/MiniCPM-o-4_5",
+    "url": "https://huggingface.co/openbmb/MiniCPM-o-4_5/raw/main/README.md",
+    "file": "openbmb__MiniCPM-o-4_5.md",
+    "sha256": "4AFC013F5F1E4471BDBEE28515EB5BE802EA2C80C8D89D4107C4D4AEC439577A",
+    "retrieved_at": "2026-09-11T02:33:56.7134724+08:00",
+    "status": "saved"
+  },
+  {
+    "model": "google/gemma-4-12B-it",
+    "url": "https://huggingface.co/google/gemma-4-12B-it/raw/main/README.md",
+    "file": "google__gemma-4-12B-it.md",
+    "sha256": "04A06469E3D83B941EAA776A3647B8690B5A7CC5C833AF2381E5345BB1BB45C0",
+    "retrieved_at": "2026-09-11T02:33:57.4771081+08:00",
+    "status": "saved"
+  }
+]

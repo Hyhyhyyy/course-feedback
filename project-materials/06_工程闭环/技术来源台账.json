@@ -1,0 +1,252 @@
+[
+  {
+    "id": "T01",
+    "title": "Qwen3.8-27B",
+    "publisher": "Qwen",
+    "url": "https://huggingface.co/Qwen/Qwen3.8-27B",
+    "license": "Apache-2.0",
+    "use": "主模型候选；视觉和文本，部署前本项目实测",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T02",
+    "title": "Qwen3.8-Flash-Next",
+    "publisher": "Qwen",
+    "url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next",
+    "license": "qwen-community-1.0",
+    "use": "更大混合专家模型；自定义许可未逐条审查，不默认启用",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T03",
+    "title": "Qwen3.8-2.4T-A95B",
+    "publisher": "Qwen",
+    "url": "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B",
+    "license": "qwen3.8-max",
+    "use": "开放权重与托管API模态不同；不作首期部署",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T04",
+    "title": "Qwen3.6-27B",
+    "publisher": "Qwen",
+    "url": "https://huggingface.co/Qwen/Qwen3.6-27B",
+    "license": "Apache-2.0",
+    "use": "同规模代际对照",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T05",
+    "title": "Qwen3.6-35B-A3B",
+    "publisher": "Qwen",
+    "url": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B",
+    "license": "Apache-2.0",
+    "use": "混合专家效率候选，总权重不等于激活参数",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T06",
+    "title": "Qwen3.5-9B",
+    "publisher": "Qwen",
+    "url": "https://huggingface.co/Qwen/Qwen3.5-9B",
+    "license": "Apache-2.0",
+    "use": "轻量文本与视觉调试候选",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T07",
+    "title": "Qwen3-ASR",
+    "publisher": "Qwen",
+    "url": "https://github.com/QwenLM/Qwen3-ASR",
+    "license": "Apache-2.0",
+    "use": "官方转写与强制对齐调用说明",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T08",
+    "title": "Qwen3-ASR-1.7B",
+    "publisher": "Qwen",
+    "url": "https://huggingface.co/Qwen/Qwen3-ASR-1.7B",
+    "license": "Apache-2.0",
+    "use": "中文课程转写候选",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T09",
+    "title": "Qwen3-ForcedAligner-0.6B",
+    "publisher": "Qwen",
+    "url": "https://huggingface.co/Qwen/Qwen3-ForcedAligner-0.6B",
+    "license": "Apache-2.0",
+    "use": "文本音频时间对齐；不校正文义",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T10",
+    "title": "PaddleOCR-VL-1.6",
+    "publisher": "PaddlePaddle",
+    "url": "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6",
+    "license": "Apache-2.0",
+    "use": "课件与公式区域识别候选；文档基准不等于视频板书",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T11",
+    "title": "MiniCPM-o-4_5",
+    "publisher": "OpenBMB",
+    "url": "https://huggingface.co/openbmb/MiniCPM-o-4_5",
+    "license": "Apache-2.0",
+    "use": "9B多模态局部音画核对候选",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T12",
+    "title": "gemma-4-12B-it",
+    "publisher": "Google DeepMind",
+    "url": "https://huggingface.co/google/gemma-4-12B-it",
+    "license": "Apache-2.0",
+    "use": "跨模型家族文本/音画对照候选；限制以卡片为准",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T13",
+    "title": "Qwen3-Embedding-0.6B",
+    "publisher": "Qwen",
+    "url": "https://huggingface.co/Qwen/Qwen3-Embedding-0.6B",
+    "license": "Apache-2.0",
+    "use": "语义检索与问题聚类候选召回",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T14",
+    "title": "Qwen3-Reranker-0.6B",
+    "publisher": "Qwen",
+    "url": "https://huggingface.co/Qwen/Qwen3-Reranker-0.6B",
+    "license": "Apache-2.0",
+    "use": "候选片段重排序，不提供校准概率",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T15",
+    "title": "DeepSeek-V4-Flash-Vision-Exp",
+    "publisher": "DeepSeek",
+    "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp",
+    "license": "MIT",
+    "use": "实验性视觉旗舰；官方列4×GB300部署例，非首期",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T16",
+    "title": "DeepSeek-V4-Pro-0813",
+    "publisher": "DeepSeek",
+    "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813",
+    "license": "待逐条核对",
+    "use": "大型文本复核候选，不默认配置",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T17",
+    "title": "GLM-5.3",
+    "publisher": "Z.ai",
+    "url": "https://huggingface.co/zai-org/GLM-5.3",
+    "license": "glm-5.3",
+    "use": "自定义许可、编码/智能体导向；非教学评价证明",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T18",
+    "title": "Kimi-K3",
+    "publisher": "Moonshot AI",
+    "url": "https://huggingface.co/moonshotai/Kimi-K3",
+    "license": "Kimi K3 License",
+    "use": "大规模开放权重；自定义许可未逐条审查",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T19",
+    "title": "Mistral-Small-4-119B-2603",
+    "publisher": "Mistral AI",
+    "url": "https://huggingface.co/mistralai/Mistral-Small-4-119B-2603",
+    "license": "Apache-2.0",
+    "use": "119B视觉文本跨家族对照；不是小显存模型",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T20",
+    "title": "Qwen3.8-27B deployment recipe",
+    "publisher": "vLLM",
+    "url": "https://recipes.vllm.ai/Qwen/Qwen3.8-27B",
+    "license": "工具文档",
+    "use": "部署参考；页面明确已验证范围为文本服务",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T21",
+    "title": "Structured Outputs",
+    "publisher": "vLLM",
+    "url": "https://docs.vllm.ai/en/latest/features/structured_outputs/",
+    "license": "工具文档",
+    "use": "受约束结构输出；结构合法不等于语义正确",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T22",
+    "title": "faster-whisper",
+    "publisher": "SYSTRAN",
+    "url": "https://github.com/SYSTRAN/faster-whisper",
+    "license": "MIT代码；权重另核",
+    "use": "现有Whisper接入基线",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T23",
+    "title": "FFmpeg Filters",
+    "publisher": "FFmpeg",
+    "url": "https://ffmpeg.org/ffmpeg-filters.html",
+    "license": "构建许可依组件核查",
+    "use": "音视频处理、静音和冻结检测工具",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T24",
+    "title": "PySceneDetect documentation",
+    "publisher": "PySceneDetect",
+    "url": "https://www.scenedetect.com/docs/latest/",
+    "license": "部署时核具体发行许可",
+    "use": "镜头变化候选，非知识点边界",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  },
+  {
+    "id": "T25",
+    "title": "PaddleOCR releases",
+    "publisher": "PaddlePaddle",
+    "url": "https://github.com/PaddlePaddle/PaddleOCR/releases",
+    "license": "Apache-2.0仓库",
+    "use": "2026-05-28发布VL1.6的版本证据",
+    "checked_at": "2026-09-11",
+    "read_level": "官方模型卡/工具文档的相关部分；未复现性能"
+  }
+]

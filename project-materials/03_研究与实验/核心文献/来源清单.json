@@ -1,0 +1,40 @@
+[
+  {
+    "file": "Cai_Wei_CSCL2022.pdf",
+    "url": "https://zhenyao-cai.github.io/documents/zcai_cscl2022.pdf",
+    "retrieved_at": "2026-09-11T08:17:26.1579155+08:00",
+    "bytes": 457053,
+    "sha256": "215365EE16E1688892D9EAD1AFAB446644B26217B4AEAF1C4F71F2666554E103",
+    "status": "downloaded_pdf_not_reproduction"
+  },
+  {
+    "file": "PedagogyBench_ACL2026.pdf",
+    "url": "https://aclanthology.org/2026.findings-acl.614.pdf",
+    "retrieved_at": "2026-09-11T08:17:28.5568513+08:00",
+    "bytes": 5404236,
+    "sha256": "5DAC7ABEBEC5D6135A02E8182B12D92331353249B0B1970BA971ECFD145F8C1A",
+    "status": "downloaded_pdf_not_reproduction"
+  },
+  {
+    "file": "ClassComet_作者稿.pdf",
+    "url": "https://www.jeffjianzhao.com/papers/classcomet.pdf",
+    "status": "failed",
+    "error": "Operation is not valid due to the current state of the object."
+  },
+  {
+    "file": "CoKnowledge_作者全文.html",
+    "url": "https://arxiv.org/html/2502.03767v1",
+    "retrieved_at": "2026-09-11T08:18:47.7427160+08:00",
+    "bytes": 366072,
+    "sha256": "BE339FB00EC4C9BAF49CFFED37FD7BB243EEE540396E55950148FFB1592A0833",
+    "status": "downloaded_html_external_assets_not_bundled"
+  },
+  {
+    "file": "EduRABSA_作者全文.html",
+    "url": "https://arxiv.org/html/2508.17008v1",
+    "retrieved_at": "2026-09-11T08:18:49.1992660+08:00",
+    "bytes": 333787,
+    "sha256": "7442228C4FE315A3B70F6C149D3CA4CA1257141FB1F6F6C535E294719ECFE4C8",
+    "status": "downloaded_html_external_assets_not_bundled"
+  }
+]

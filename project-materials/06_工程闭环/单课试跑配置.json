@@ -1,0 +1,15 @@
+{
+  "experiment_id": "BV1Y2DGYoEEw-full",
+  "video_url": "https://www.bilibili.com/video/BV1Y2DGYoEEw/",
+  "requested_minutes": 54,
+  "requested_scope": "full_video",
+  "duration_source": "media_verified",
+  "media_path": "C:\\Users\\lenovo\\Desktop\\面向Bilibili公开录播网课的多模态教学质量复盘评估系统\\source\\course-feedback\\outputs\\jobs\\d1150d3d51de4597b510077f7628a6ba\\assets\\course.mp4",
+  "danmaku_path": "C:\\Users\\lenovo\\Desktop\\面向Bilibili公开录播网课的多模态教学质量复盘评估系统\\source\\course-feedback\\outputs\\jobs\\d1150d3d51de4597b510077f7628a6ba\\assets\\course.danmaku.xml",
+  "permission_record_path": null,
+  "model_base_url": null,
+  "model_id": null,
+  "scope_note": "以实际媒体时长为准，不裁成小样本；完整弹幕量以获准快照为准",
+  "automatic_platform_collection": true,
+  "actual_duration_seconds": 3240.78585
+}

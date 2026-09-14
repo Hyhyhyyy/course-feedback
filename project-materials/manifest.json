@@ -1,0 +1,222 @@
+[
+  {
+    "path": "01_项目设计/FrameScope模块核验记录.md",
+    "sha256": "b1add8b8046d2214c86b3f88ed5227d55728450f2504963c522035a06432045b"
+  },
+  {
+    "path": "01_项目设计/分阶段开发与成果计划.md",
+    "sha256": "76c9463884e01ea4c22c60293466ace3b60c162117996cfb725ecaa43e5eba9d"
+  },
+  {
+    "path": "01_项目设计/总体设计.md",
+    "sha256": "7241f9c2f1a2fee320a1e6591a6278ddd74f6b99e7822fb9647a7d2441875526"
+  },
+  {
+    "path": "01_项目设计/核心创新与验证方案.md",
+    "sha256": "bca2f7c7a02a50d2632b02f6972dd3baea0a70a2e870a217feae6af13f624774"
+  },
+  {
+    "path": "01_项目设计/研究与工程总图.md",
+    "sha256": "758463398e2db74641ccd85727f3a2c563a29d20c0e48b7c6d42105ffac12ed8"
+  },
+  {
+    "path": "02_合规与授权/B站三视频研究数据路线.md",
+    "sha256": "0c08f928bd0d52fcdd8ae6773dfbf0ad24fe36a577d98c7b3fb2d8f71e51b436"
+  },
+  {
+    "path": "02_合规与授权/合规核查.md",
+    "sha256": "88f84d317640b085517c58da5dcdee9130c7484bf3418e7ce4dfd005591557a9"
+  },
+  {
+    "path": "02_合规与授权/授权台账.csv",
+    "sha256": "0195b49b9b7ac5da81f0c020079832d470bc7f19b62393c800b4a599861d4a7e"
+  },
+  {
+    "path": "03_研究与实验/前沿相关研究综述.md",
+    "sha256": "bb61aae9a9c303be5e07914ed1964eaa510386f7d685a27ff9b407b8b5c4b7f3"
+  },
+  {
+    "path": "03_研究与实验/升级依据与优秀案例.md",
+    "sha256": "4037086c526073dfa615ead6d6839712ca7f2f46beec8116d513c94d5a6a6dd9"
+  },
+  {
+    "path": "03_研究与实验/反馈标注与指标规范.md",
+    "sha256": "ecabb577c7dcfb17a60ac16d0c056777afbdffa45278eadb0e2aeaae90fa0dfa"
+  },
+  {
+    "path": "03_研究与实验/实验与验证.md",
+    "sha256": "a0cf7dfaaa0a3dc901b1133ea465f50cf5ee04be399b62be7155234ac0a6e7ef"
+  },
+  {
+    "path": "03_研究与实验/弹幕反馈分类讨论.md",
+    "sha256": "473f893478b28059fd169c2eff853c79f365fe5c554b3362a8c54d7c9bfe57d4"
+  },
+  {
+    "path": "03_研究与实验/教学反馈判定细则与报告依据.md",
+    "sha256": "429e2e3dd9a39e962e0f574a51729c07bd90f080b2f8b97b1761a7185acbcca5"
+  },
+  {
+    "path": "03_研究与实验/权威依据与功能映射.md",
+    "sha256": "86953c4d25d43fa39569b325f177765ef80753b7eb14aef76194c0ebd1084398"
+  },
+  {
+    "path": "03_研究与实验/检索与证据维护记录.md",
+    "sha256": "e81583e466c4b8ba86c0a4003675abe36b877d945fd5fbe9e63aceab9a9bd6c9"
+  },
+  {
+    "path": "03_研究与实验/相关研究阅读与修订记录.md",
+    "sha256": "65b42d27fd8e5d2cdb026d620ee9da8fd5aae434977b026bd5d80defcb914afe"
+  },
+  {
+    "path": "03_研究与实验/研究依据与设计论证.md",
+    "sha256": "dcbcb808a1ec527b1aeb8ce1247795fcf5e31377ccdaa422012d567a9e4bf385"
+  },
+  {
+    "path": "03_研究与实验/证据闭环审计.md",
+    "sha256": "68aeba852574e237466dd9b6f80ea30f93057e381a54edd47bf5fbed43e95b41"
+  },
+  {
+    "path": "03_研究与实验/核心文献/来源清单.json",
+    "sha256": "3e0442d20e0d20be85aec4acc318513f7d6f7b0eece879574f58a53aa072eb20"
+  },
+  {
+    "path": "04_申报与答辩/大工2027批次通知核验.md",
+    "sha256": "53a40fd37269f7f50a6eac54e81cec7ed82a36692011292d8cde4d7c2aa5133d"
+  },
+  {
+    "path": "04_申报与答辩/申报书_教师反馈主线.docx",
+    "sha256": "be5717bd3d78244084c37ea95750729af53c488876490b06cc9019e46545b986"
+  },
+  {
+    "path": "04_申报与答辩/申报书_教师反馈主线.md",
+    "sha256": "a66e2a92581f19f2ddf83bd434f7f988dfe850c05e7fd025b2701edf2268fa8f"
+  },
+  {
+    "path": "04_申报与答辩/申报准备与资料管理说明.md",
+    "sha256": "0b3617eaedd217e432d5fc4bef99585336e92137469890065f1de6a7f1d5f8f8"
+  },
+  {
+    "path": "04_申报与答辩/申报支撑/材料使用说明.md",
+    "sha256": "01cd737f9234862723c9c8743c9375292f8080f2a947c07649715f38ddc72c35"
+  },
+  {
+    "path": "04_申报与答辩/申报支撑/生成申报书.py",
+    "sha256": "3c46811c7105022a58a3ec18eb624e85fc5a4e1c139878d959eb2edc929e6044"
+  },
+  {
+    "path": "04_申报与答辩/申报支撑/研究技术路线.mmd",
+    "sha256": "cbbe62cdc42a54bb510601cd5e5cc34c4802db61573d042f996a5d4c23ce2380"
+  },
+  {
+    "path": "04_申报与答辩/申报支撑/研究技术路线.png",
+    "sha256": "c4c61d8e3a120e0c39285d3c10bc9168836a1386baff635b59f9c7b69067c8ce"
+  },
+  {
+    "path": "04_申报与答辩/申报支撑/研究技术路线.svg",
+    "sha256": "46931998dd6257257479e69d978c789f1e88701f7df47f7189636ad54cdabba7"
+  },
+  {
+    "path": "04_申报与答辩/申报支撑/阶段安排.mmd",
+    "sha256": "beeb11855a21c84d0d520d9efcb966447af5d6743a835672950b1832129eb73f"
+  },
+  {
+    "path": "04_申报与答辩/申报支撑/阶段安排.png",
+    "sha256": "b0bda6954a44709b6a27d4c27d1443bba956267ee37883f4f9de29038e0c4ee8"
+  },
+  {
+    "path": "04_申报与答辩/申报支撑/阶段安排.svg",
+    "sha256": "9722804d3115d24e3a5f8ce42392a6b6e4f232988326c2ec1ba4a24a22e63aa8"
+  },
+  {
+    "path": "05_报告设计/教师复盘报告规范.md",
+    "sha256": "ed6555d0f4e6a6d7d239f298fa09d2ffdd62a412744df9b2fb881cd8f8a57b67"
+  },
+  {
+    "path": "06_工程闭环/FrameScope接入与加强.md",
+    "sha256": "63cd620c0763c1ec3069491f1ae4b87b63388c2ff5ed9b513f8bccbd581bc532"
+  },
+  {
+    "path": "06_工程闭环/FrameScope源码核验与接入方案.md",
+    "sha256": "25db53df064bcef8956e40dc48bb3f0ca49017f324bdd1c99bde7cabfa4873b5"
+  },
+  {
+    "path": "06_工程闭环/单课试跑配置.json",
+    "sha256": "f19ae099685e0bdca1c4d7ebc53854ac588e28370087f8411a5044b581e85917"
+  },
+  {
+    "path": "06_工程闭环/开放模型与工程闭环研究.md",
+    "sha256": "37fb74a95a562260015270646016094887cc240484105297212dc9e538d90cdd"
+  },
+  {
+    "path": "06_工程闭环/技术来源台账.json",
+    "sha256": "0d150f3a376227892f25b13b648bf831867eca45dea880a01257e9802e37ad0b"
+  },
+  {
+    "path": "06_工程闭环/数据契约与端到端示例.md",
+    "sha256": "14fe86869932d3324600bc02d3ebb2792c3e98ecafce4aaf615f8d4ad0ffd7a8"
+  },
+  {
+    "path": "06_工程闭环/立项前实施与验收.md",
+    "sha256": "92144bbe4d5250094be45cd8eefaeb969787c66cf36de825cfa32a078508ff89"
+  },
+  {
+    "path": "06_工程闭环/FrameScope源码核验/source_manifest.json",
+    "sha256": "579e2f810e5ace1a198ac15a4132b20f6ddecd3f4facb0387f737fd9cbcb62ab"
+  },
+  {
+    "path": "06_工程闭环/官方模型卡/来源清单.json",
+    "sha256": "9cf982dbf496b1a3dc36ae0573ae0e9e9e7c30630ef34f3b3be1eb82bf9b9379"
+  },
+  {
+    "path": "06_工程闭环/环节说明/00_阅读导航.md",
+    "sha256": "165eecf1d137c82ece89b1c0cea0c3927d32694c1061c95ebd798eb8fd539e71"
+  },
+  {
+    "path": "06_工程闭环/环节说明/01_输入与权限.md",
+    "sha256": "f3ab7698af3d92a0b87a6a71cbe95f209b796eb2bb16433630a532170a975a82"
+  },
+  {
+    "path": "06_工程闭环/环节说明/02_清洗与计数.md",
+    "sha256": "47d976ffdfc5310f7a126305d093dfd67208a570331558ee62a132565ea0ead4"
+  },
+  {
+    "path": "06_工程闭环/环节说明/03_音视频取证.md",
+    "sha256": "6c63b9aa84cb6e424490baff68db490e4aee996aef7030b9ab32b4e5f690ac53"
+  },
+  {
+    "path": "06_工程闭环/环节说明/04_课程结构.md",
+    "sha256": "ef181540da0bde31bd7fc8ce6effc42c2d70a6064ee9bc47bfcff36491a860e0"
+  },
+  {
+    "path": "06_工程闭环/环节说明/05_反馈与问题单元.md",
+    "sha256": "6353678871f77a3acd1c2aeeeb521935b448937dd9162b1a77efe4ee7fef86ed"
+  },
+  {
+    "path": "06_工程闭环/环节说明/06_归属与聚合.md",
+    "sha256": "fafb037dde20703b0d60412a2dcd979916a38f4bb62afa8b8b604d02f2d29553"
+  },
+  {
+    "path": "06_工程闭环/环节说明/07_报告生成.md",
+    "sha256": "e5b3170e1c948b43b41c80daf8c838b01d1aea6d5104fb2f027a37005af8f08b"
+  },
+  {
+    "path": "06_工程闭环/环节说明/08_教师复核与复现.md",
+    "sha256": "c83c41de0231fd31c4d1ae1e2284606e01103716c2035dec63d1e9c566ea5a42"
+  },
+  {
+    "path": "07_实际试验/BV1Y2DGYoEEw_完整课程试验报告.md",
+    "sha256": "27e84e127d82e3978aefc5a75cd1af4d8e846f7602122e7ec56de869c9898487"
+  },
+  {
+    "path": "07_实际试验/BV1Y2DGYoEEw_试验逻辑.mmd",
+    "sha256": "a0a1e96dd78326517b4ad0b9c221d5a5d8b733202d7c4c485f63af3db4ff85a8"
+  },
+  {
+    "path": "07_实际试验/BV1Y2DGYoEEw_试验逻辑.png",
+    "sha256": "e9599e4d68778ab027a92a67753bceb439ff22fcccf30b52e2b19003679bc8c8"
+  },
+  {
+    "path": "07_实际试验/BV1Y2DGYoEEw_试验逻辑.svg",
+    "sha256": "61296c7967f2e97a1b5c9494b2bc8a6e85401ccf2effe040bc1067cc21115eae"
+  }
+]
