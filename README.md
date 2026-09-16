@@ -1,3 +1,5 @@
+<p align="center"><img src="brand/readme-banner.png" alt="课镜：让教学与反馈彼此看见。网课教学、多模态反馈、证据复盘。" width="100%"></p>
+
 # 课镜 · 网课教学与反馈复盘平台
 
 课镜提供教师视频上传与发布、课程播放和弹幕互动，并在平台内运行教学反馈分析系统。教师从学生原始表达出发，结合课程转写、证据画面和教学大纲复盘讲解。
@@ -45,8 +47,8 @@ flowchart TD
 Windows PowerShell，Python 3.10以上：
 
 ```powershell
-git clone https://github.com/Hyhyhyyy/course-feedback.git
-cd course-feedback
+git clone https://github.com/Hyhyhyyy/OnlineCourseFeedbackPlatform.git
+cd OnlineCourseFeedbackPlatform
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements-media.txt
 .\.venv\Scripts\python.exe src/data_server.py --port 8766
@@ -87,3 +89,12 @@ $env:PYTHONPATH = 'src'
 ## 外部平台合作扩展
 
 原B站接入代码继续保留在仓库，默认不作为主入口，也不自动导入旧材料。确认合作数据范围后，可设置 `COURSE_EXTERNAL_ENABLED=1` 启用教师扩展测试；相关代码为 `src/acquire_course.py`、`src/fetch_course.py` 和 `src/bilibili_login.py`。API配置与历史验证见[API说明](docs/api-setup.md)。外部采集、模型传输及公开展示需分别核对范围。
+
+
+## 品牌视觉
+
+<p align="center"><img src="brand/xiaojing-welcome.png" alt="小镜：课镜的书页精灵" width="180"></p>
+
+Logo以书页、窗口与双向交流表达课程和反馈的关系。“小镜”用于欢迎和操作引导，正式教师报告以Logo为主。首页和工作台已接入品牌资源，独立HTML报告内嵌Logo，无需联网加载。
+
+品牌主色为学术蓝 `#244A70` 与青绿 `#39877E`，辅以暖白和少量琥珀黄。[资源与使用说明](brand/README.md)包含透明PNG、几何SVG图标及配色。当前为AI辅助设计的基础视觉，尚未完成商标检索或学校品牌授权。

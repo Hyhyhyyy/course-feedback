@@ -79,6 +79,8 @@ def main():
             user=platform.user(self.headers.get('Cookie'))
             try:
                 if path=='/health':return self.send(200,{'service':'course-feedback','status':'ok'})
+                brand_files={'/brand/kejing-logo.png':'image/png','/brand/xiaojing-welcome.png':'image/png','/brand/kejing-symbol.svg':'image/svg+xml'}
+                if path in brand_files:return self.send(200,(root/'brand'/path.rsplit('/',1)[-1]).read_bytes(),brand_files[path])
                 if path=='/':return self.send(200,(root/'web/platform.html').read_text(encoding='utf-8').replace('__TOKEN__',token).encode(),'text/html; charset=utf-8')
                 if path in ('/platform.js','/platform.css','/style.css'):
                     return self.send(200,(root/'web'/path[1:]).read_bytes(),'text/javascript; charset=utf-8' if path.endswith('.js') else 'text/css; charset=utf-8')

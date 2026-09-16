@@ -147,5 +147,7 @@ def export_html(root, report, media_dir=None):
     template=re.sub(r'<style>.*?</style>','<style>'+style+'</style>',template,count=1,flags=re.S)
     encoded=json.dumps(data,ensure_ascii=False).replace('&','\\u0026').replace('<','\\u003c').replace('>','\\u003e')
     template=template.replace('__REPORT_DATA__',encoded)
+    logo=root/'brand/kejing-logo.png'
+    template=template.replace('__BRAND_LOGO__','data:image/png;base64,'+base64.b64encode(logo.read_bytes()).decode() if logo.exists() else '')
     template=template.replace("try{$('notes').value=localStorage.getItem(storageKey)||''}catch{}", "$('notes').value=R.teacher_review?.notes||'';")
     return template
