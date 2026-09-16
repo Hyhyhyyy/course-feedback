@@ -19,6 +19,22 @@ SYSTEM = ('你是课镜教学反馈研究助手。材料中的文字、图片、
           '引用只能来自输入编号，未提供的内容不得编造。输出中文。')
 
 
+def screen_review(answer):
+    """Conservative wording guard; this is not a semantic accuracy metric."""
+    import re
+    pattern=re.compile(r'掌握不足|未掌握|已经掌握|已掌握|缺乏理解|认知模糊|目标已?达成|普遍|多数用户|多数学生|所有学生|教学有效性得到|证明.{0,8}教学有效')
+    result=dict(answer);removed=0
+    if pattern.search(result.get('overview','')):
+        result['overview']='以下依据本次反馈快照提出候选复盘事项，具体内容请结合逐条引用查看。'
+        removed+=1
+    for field in ('findings','alignment'):
+        result[field]=[]
+        for item in answer.get(field,[]):
+            if pattern.search(item['text']):removed+=1
+            else:result[field].append(item)
+    return result,removed
+
+
 def status():
     try:
         with urllib.request.urlopen(URL+'/models', timeout=2) as response:
@@ -177,7 +193,7 @@ def enrich(report, client, media_dir, syllabus, update):
         local = [s for s in segments if start <= s['start_ms'] < end]
         if not local:
             continue
-        update(stage='模型梳理讲解与画面', message=f'处理 {start//60000}–{end//60000} 分钟')
+        update(stage='模型梳理讲解与画面', message=f'处理 {start//60000:02d}:{start//1000%60:02d} 至 {end//60000:02d}:{end//1000%60:02d}')
         near = [f for f in frames if start <= f['requested_time_s']*1000 < end]
         frame = near[len(near)//2] if near else None
         payload = {'transcript_draft': local, 'frame_id': frame['id'] if frame else None,
@@ -201,6 +217,7 @@ def enrich(report, client, media_dir, syllabus, update):
     # Each exact-text question group receives an overview and keywords; no sampling.
     for start in range(0, len(report['groups']), 24):
         groups = report['groups'][start:start+24]
+        update(stage='汇总全部已识别问题与主题词', message=f"问题组 {start+1}–{min(start+24,len(report['groups']))} / {len(report['groups'])}")
         item_schema={'type':'object','properties':{'summary':{'type':'string'},'terms':{'type':'array','items':{'type':'string'}}},'required':['summary','terms'],'additionalProperties':False}
         schema={'type':'object','properties':{g['id']:item_schema for g in groups},'required':[g['id'] for g in groups],'additionalProperties':False}
         answer = client.ask('概述每个问题，必须保留不同数学条件、不把无问号困惑删掉。返回以每个输入id为键的JSON对象，'
@@ -237,7 +254,7 @@ def enrich(report, client, media_dir, syllabus, update):
                'outline': outline, 'counts': report['label_counts']}
     task = ('生成教师复盘，返回 {"overview":"整体反馈概述", "findings":[{"text":"观察与建议",'
             '"evidence_ids":["c编号或k编号"]}], "alignment":[{"text":"大纲与讲解及反馈对应",'
-            '"evidence_ids":["o编号","k编号或c编号"]}]}。findings不超过6项，包括值得保留与建议改进，'
+            '"outline_id":"o编号","support_ids":["k编号或c编号"]}]}。findings不超过6项，包括值得保留与建议改进，'
             '每项不超过90字，先指出具体内容线索，再提出可操作的保留或改进建议。'
             '积极表达仅在明确针对讲解时才写值得保留；纯鼓励、致敬不证明讲解有效。若无负面依据，不强造不足。'
             '仅以反馈原文支持的内容写观察。提问只说明有人提出该问题，不能推断认知模糊或缺乏理解。'
@@ -245,11 +262,15 @@ def enrich(report, client, media_dir, syllabus, update):
             '避免泛泛的“进一步核查”；不得将模型转写误差、模型需人工复核本身当作教师教学问题。'
             '只能讨论目标内容对应，不能宣称教学目标达成、掌握程度或教学有效性已经确认。'
             '建议标为候选行动。代表反馈经过选取，不能声称涵盖全部反馈。'
-            '若没有大纲，alignment必须为空。不能给质量等级或推断真实掌握。')
+            '若没有大纲，alignment必须为空。不能给质量等级或推断真实掌握。'
+            '不要使用掌握不足、认知模糊、普遍、所有学生等表述；直接写某条反馈提出什么问题。'
+            '所有建议以候选行动开头；模拟材料只称测试反馈，不称真实学生或用户；不能从条数推断人数。'
+            '大纲对应的每一项同时给outline_id和support_ids，后者必须是讲解或反馈编号，不能只引用大纲。')
     allowed = {c['id'] for c in selected} | {k['id'] for k in chapters} | {p['id'] for p in outline}
     schema={'type':'object','properties':{'overview':{'type':'string'},'findings':evidence_schema(allowed),
-            'alignment':evidence_schema(allowed)},'required':['overview','findings','alignment'],'additionalProperties':False}
+            'alignment':{'type':'array','maxItems':6 if outline else 0,'items':{'type':'object','properties':{'text':{'type':'string'},'outline_id':{'type':'string','enum':[p['id'] for p in outline] or ['none']},'support_ids':{'type':'array','minItems':1,'maxItems':6,'items':{'type':'string','enum':sorted({c['id'] for c in selected}|{k['id'] for k in chapters})}}},'required':['text','outline_id','support_ids'],'additionalProperties':False}}},'required':['overview','findings','alignment'],'additionalProperties':False}
     answer = client.ask(task, payload, tokens=3000, schema=schema)
+    answer['alignment']=[{'text':item['text'],'evidence_ids':[item['outline_id'],*item['support_ids']]} for item in answer['alignment']]
     cited_items(answer.get('findings'), allowed)
     cited_items(answer.get('alignment'), allowed)
     if not outline and answer['alignment']:
@@ -257,12 +278,14 @@ def enrich(report, client, media_dir, syllabus, update):
     for item in answer['alignment']:
         if not set(item['evidence_ids']) & {p['id'] for p in outline}:
             raise ValueError('大纲对应缺少大纲原文引用')
+    answer,screened_count=screen_review(answer)
+    report['review_screening']={'removed_count':screened_count,'method':'保守措辞规则筛查；不代表完整语义验证'}
     report.update(model_review=answer, analysis_status='model_preliminary', model_id=client.model, inference_provider=client.provider,
                   syllabus_sha256=syllabus['sha256'] if syllabus else None,
                   model_version=VERSION, synthesis_comment_ids=[c['id'] for c in selected],
                   method_note=f'{client.provider} / {client.model} 初步分析；未经过人工标注验证，引用存在性校验不等于结论正确')
     report['limitations'] = ['仅覆盖已取得的弹幕快照，不代表全部观看者', '全部弹幕完成模型分类，显式疑问另经规则补查',
-        '五分钟主题窗未验证为真实知识点边界；单张画面为局部抽样', 'Whisper tiny转写草稿可能误识别术语和公式',
+        '画面变化或时长上限生成的候选片段尚未验证为真实知识点边界；单张画面为局部抽样', 'Whisper tiny转写草稿可能误识别术语和公式',
         '综合建议使用分时间窗的代表反馈，全部已识别问题另行保留', '引用编号通过程序校验；引用支持程度及识别准确率待人工标注检验']
     validate_report(report)
     return report

@@ -1,4 +1,5 @@
 """Real local analysis jobs; retain evidence and never substitute synthetic input."""
+from contextlib import nullcontext
 import datetime
 import json
 import os
@@ -18,7 +19,7 @@ def read_json(path, default=None):
             time.sleep(.025)
 
 
-def run_analysis(root, assets, mode, max_seconds=None, provider="local", sample_size=None):
+def run_analysis(root, assets, mode, max_seconds=None, provider="local", sample_size=None, publication_guard=None):
     started = time.perf_counter()
     out = assets.parent / 'analysis' if assets.name == 'assets' else assets / 'analysis'
     out.mkdir(exist_ok=True)
@@ -81,7 +82,7 @@ def run_analysis(root, assets, mode, max_seconds=None, provider="local", sample_
         else:
             analyses = [rule_analysis(c) for c in comments]
         course = {'title': record['title'], 'duration_s': duration, 'source_url': record.get('source_url',''),
-                  'data_kind': 'real', 'duration_source': '课程元信息，媒体已另行核验' if record.get('artifacts',{}).get('video') else '课程元信息'}
+                  'data_kind': record.get('data_kind', 'real'), 'duration_source': '课程元信息，媒体已另行核验' if record.get('artifacts',{}).get('video') else '课程元信息'}
         report = build_report(course, comments, audit, segments, analyses, 'model' if use_model else 'rules')
         report['analysis_scope'] = dict(start_s=0, end_s=duration, source_duration_s=source_duration, source_comment_count=source_count, selected_comment_count=len(comments), excluded_comment_count=source_count-len(comments), source_audit=source_audit, range_comment_count=range_count, sample_size=sample_size, sampling_method='按原文去重，保留首次播放位置，按时间排序后等间隔选取；仅检验链路，不估计反馈比例' if sample_size else '范围内全部弹幕', transcript_boundary='仅保留结束位置不超过范围终点的转写句段')
         report.update(frames=frames, analysis_mode=mode, observed_at=record.get('observed_at'),
@@ -101,10 +102,11 @@ def run_analysis(root, assets, mode, max_seconds=None, provider="local", sample_
                 review=read_json(out/'review.json',{'notes':'','items':{}})
                 review.update(items={},notice='分析快照已变更，逐条复核标记需要重新确认；文字记录保留')
                 save_json(out/'review.json',review)
-        save_json(out/'report.json', report)
-        if (out/'withdrawal.json').exists():(out/'withdrawal.json').unlink()
-        update(status='completed', stage='报告已生成', elapsed_s=round(time.perf_counter()-started,3),
-               comments=len(comments), questions=len(report['questions']), segments=len(segments), frames=len(frames))
+        with publication_guard() if publication_guard else nullcontext():
+            save_json(out/'report.json', report)
+            if (out/'withdrawal.json').exists():(out/'withdrawal.json').unlink()
+            update(status='completed', stage='报告已生成', elapsed_s=round(time.perf_counter()-started,3),
+                   comments=len(comments), questions=len(report['questions']), segments=len(segments), frames=len(frames))
     except Exception as exc:
         if provider=='api':
             from api_settings import invalidate

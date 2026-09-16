@@ -1,4 +1,5 @@
 """Local acquisition UI with user-confirmed QR login and artifact-based results."""
+from contextlib import contextmanager
 import argparse
 import json
 import secrets
@@ -77,6 +78,7 @@ def main():
             parsed=urlparse(self.path);path=parsed.path
             user=platform.user(self.headers.get('Cookie'))
             try:
+                if path=='/health':return self.send(200,{'service':'course-feedback','status':'ok'})
                 if path=='/':return self.send(200,(root/'web/platform.html').read_text(encoding='utf-8').replace('__TOKEN__',token).encode(),'text/html; charset=utf-8')
                 if path in ('/platform.js','/platform.css','/style.css'):
                     return self.send(200,(root/'web'/path[1:]).read_bytes(),'text/javascript; charset=utf-8' if path.endswith('.js') else 'text/css; charset=utf-8')
@@ -210,7 +212,6 @@ def main():
                     if action=='comment':platform.post_comment(cid,user,data);return self.send(201,{'ok':True})
                     if action=='withdraw':
                         with lock:
-                            if cid in analysis_workers and analysis_workers[cid].is_alive():return self.send(409,{'error':'分析进行中，结束后可撤回'})
                             platform.withdraw(cid,user,data.get('id'))
                         return self.send(200,{'ok':True})
                     if action=='snapshot':
@@ -243,6 +244,7 @@ def main():
                     if not (assets/'acquisition.json').exists():raise ValueError('无素材记录')
                     if action=='syllabus':
                         with lock:
+                            if any(t.is_alive() for t in analysis_workers.values()):return self.send(409,{'error':'分析进行中，请完成后再修改教学大纲'})
                             document=parse_upload(data);save_json(out/'syllabus.json',document)
                         return self.send(200,{'syllabus':document,'saved':True})
                     if action=='review':
@@ -280,7 +282,14 @@ def main():
                                 snap=platform.snapshot(jid,user,external_service()['url'] if provider=='api' else None)
                                 if not snap['count']:return self.send(409,{'error':'当前没有同意本次处理范围的弹幕，请先积累反馈'})
                             save_json(out/'state.json',{'status':'running','stage':'任务准备中','mode':mode})
-                            thread=threading.Thread(target=run_analysis,args=(root,assets,mode,limit,provider,data.get('sample_size')),daemon=True);analysis_workers[jid]=thread;thread.start()
+                            withdrawal_before=read_json(out/'withdrawal.json')
+                            @contextmanager
+                            def publication_guard():
+                                with lock:
+                                    if read_json(out/'withdrawal.json') != withdrawal_before:
+                                        raise ValueError('分析期间有反馈撤回，本次结果不发布；请重新分析')
+                                    yield
+                            thread=threading.Thread(target=run_analysis,args=(root,assets,mode,limit,provider,data.get('sample_size'),publication_guard),daemon=True);analysis_workers[jid]=thread;thread.start()
                         return self.send(202,{'id':jid})
                     return self.send(404,{'error':'未找到操作'})
                 if self.path!='/api/acquire':return self.send(404,{'error':'未找到'})

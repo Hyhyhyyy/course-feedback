@@ -1,5 +1,5 @@
 import unittest
-from local_model import cited_items, classify
+from local_model import cited_items, classify, screen_review
 from course_feedback.pipeline import LABELS
 from syllabus import present_report
 
@@ -10,6 +10,13 @@ class FakeClient:
 
 
 class LocalModelTests(unittest.TestCase):
+    def test_unsupported_mastery_and_population_claims_screened(self):
+        answer={'overview':'学生普遍掌握不足','findings':[{'text':'学生掌握不足','evidence_ids':['c1']},{'text':'反馈提出为何取极限；候选行动：补充实例','evidence_ids':['c1']}],'alignment':[]}
+        safe,n=screen_review(answer)
+        self.assertEqual(n,2)
+        self.assertEqual(len(safe['findings']),1)
+        self.assertEqual(len(answer['findings']),2)
+
     def test_invalid_citations_rejected(self):
         for refs in [[], ['missing'], 'c1']:
             with self.assertRaises(ValueError):

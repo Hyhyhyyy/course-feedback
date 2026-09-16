@@ -2,6 +2,8 @@ import json
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
+from contextlib import contextmanager
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
 from workbench import run_analysis, analysis_status, read_json, export_html
@@ -11,6 +13,7 @@ from course_feedback.pipeline import validate_report,rule_analysis
 
 class WorkbenchTests(unittest.TestCase):
     def setUp(self):
+        ready=patch("model_access.require_ready",return_value={"text_ready":True,"vision_ready":True});ready.start();self.addCleanup(ready.stop)
         self.temp=tempfile.TemporaryDirectory();self.root=Path(self.temp.name)
         self.assets=self.root/'job/assets';self.assets.mkdir(parents=True)
         save_json(self.assets/'acquisition.json',{'title':'测试课程','duration_s':60,'artifacts':{},'source_url':'https://www.bilibili.com/video/BV1Y2DGYoEEw/'})
@@ -39,6 +42,19 @@ class WorkbenchTests(unittest.TestCase):
         output=export_html(actual,r)
         self.assertNotIn('</script><script>alert(1)',output)
         self.assertIn('测试复核',output);self.assertNotIn('__REPORT_DATA__',output)
+    def test_withdrawal_during_run_blocks_publication(self):
+        @contextmanager
+        def guard():
+            raise ValueError('分析期间有反馈撤回')
+            yield
+        run_analysis(self.root,self.assets,'text',publication_guard=guard)
+        self.assertFalse((self.root/'job/analysis/report.json').exists())
+        self.assertEqual(analysis_status(self.assets)['status'],'failed')
+    def test_explicit_synthetic_provenance_is_preserved(self):
+        record=read_json(self.assets/'acquisition.json');record['data_kind']='synthetic'
+        save_json(self.assets/'acquisition.json',record)
+        run_analysis(self.root,self.assets,'text')
+        self.assertEqual(read_json(self.root/'job/analysis/report.json')['course']['data_kind'],'synthetic')
     def test_negation_and_repeated_question_marks(self):
         for text in ['完了 听不懂了','没有听懂','大家都听懂了吗？','点点举报谢谢喵']:
             self.assertFalse(rule_analysis({'id':'c1','text':text})['positive'],text)
